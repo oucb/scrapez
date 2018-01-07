@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
+  </head>
+  <body>
+    <input id='search' placeholder="Enter URL ..."></input>
+    <input id='extensions' placeholder="Enter extensions (pdf, csv, doc, ...)"></input>
+    <button id='query'>SCRAPE IT !</button>
+    </br>
+    <input id='recurse' type='checkbox'>Recurse</input>
+    <input style="display:none" id='recurse_depth' placeholder='Recurse depth ...'></input>
+    <div id='results'></div>
+    <div id='jstree'></div>
+  <script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
+  <script>
+    $('#recurse').on('click', function(){
+      $("#recurse_depth").show();
+    })
+    $('#query').click(function(){
+      url = $('#search').val();
+      extensions = $('#extensions').val();
+      if (url == '' || extensions == ''){
+        var msg = "You must enter a URL and a list of extensions";
+        console.log(msg);
+        $('#results').html(msg)
+        return false;
+      }
+      var data = {
+        url: url,
+        extensions: extensions,
+        recurse: $('#recurse').val() || true,
+        recurse_depth: $('#recurse_depth').val() || 4
+      }
+      console.log(data);
+      $.ajax({
+        method: "POST",
+        url: "/query",
+        data: JSON.stringify(data),
+        contentType: "application/json;charset=utf-8"
+      }).done(function(data) {
+        $('#results').html(data.message);
+        alert(data.message);
+      });
+    })
+
+    // Refresh list by interval
+    var interval = setInterval(function(){
+        $.ajax({
+          method: "GET",
+          url: "/list",
+          success: function(data){
+            console.log(data)
+            $('#jstree').jstree({'core': {
+                'data' : data
+            }});
+          },
+          error: function(data){
+            console.log("Error while retrieving data")
+            console.log(data)
+          }
+        })
+    }, 5000);
+  </script>
+  </body>
+</html>

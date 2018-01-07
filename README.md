@@ -5,16 +5,34 @@ ScrapEZ is a web application to scrape websites for files that you are intereste
 It allows to search and download files from any extension format (pdf, xml, png, css, html, js, ...).
 
 ## Install
-```
-git clone https://github.com/ocervell/scrapez.git
-pip install -r requirements.txt
-```
+
+* Install ScrapEZ
+  ```
+  git clone https://github.com/ocervell/scrapez.git
+  pip install -r requirements.txt
+  ```
+  
+* Install Redis
+  ```
+  brew install redis
+  ```
 
 ## Run
-```
-python app.py
->> App running on 5000 ...
-```
+
+* Run Redis
+  ```
+  redis-server
+  ```
+  
+* Run ScrapEZ
+  ```
+  python app.py
+  >> App running on 5000 ...
+  ```
+* Run ScrapEZ Celery worker
+  ```
+  celery worker -A celeryapp.app -l info -P eventlet
+  ```
 
 ## Scrape !
 * Visit `localhost:5000`

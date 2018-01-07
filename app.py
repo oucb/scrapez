@@ -17,6 +17,10 @@ def query():
     from scrape import scrape_files
     log.info("-> Received query")
     url_data = request.get_json()
+    if not url_data:
+        return jsonify({
+            'message': 'No URL data'
+        })
     log.info("-> Query data: %s" % pprint.pformat(url_data))
     if 'name' not in url_data:
         url_data['name'] = url_data['url']
@@ -39,7 +43,9 @@ def query():
 @app.route('/list', methods=['GET'])
 def list_files():
     from utils import get_dir_tree
-    return jsonify(get_dir_tree(ROOT_DIR))
+    files = get_dir_tree(ROOT_DIR)
+    log.info(pprint.pformat(files))
+    return jsonify(files)
 
 # @app.route('/task/<id>')
 # def task_info(id):

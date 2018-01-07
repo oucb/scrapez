@@ -2,7 +2,7 @@
 
 ScrapEZ is a web application to scrape websites for files that you are interested in.
 
-It can download any extension format (pdf, xml, png, css, html, js, ...).
+It allows to search and download files from any extension format (pdf, xml, png, css, html, js, ...).
 
 ## Install
 ```

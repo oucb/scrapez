@@ -17,11 +17,11 @@ def query():
     from scrape import scrape_files
     log.info("-> Received query")
     url_data = request.get_json()
+    log.info("-> Query data: %s" % pprint.pformat(url_data))
     if not url_data:
         return jsonify({
             'message': 'No URL data'
         })
-    log.info("-> Query data: %s" % pprint.pformat(url_data))
     if 'name' not in url_data:
         url_data['name'] = url_data['url']
     if 'recurse' not in url_data:

@@ -8,11 +8,41 @@ import logging
 import requests
 import pprint
 from celeryapp import app
+from celery import group
 log = logging.getLogger(__name__)
 
 DEFAULT_RECURSE_DEPTH = 4
 
-def get_links(root_url, extensions, links={}, visited=[], count={}, recurse=True, min_depth=0, max_depth=2):
+def get_links(root_url, extensions, links={}, visited=[], count={}, auth=(), recurse=True, min_depth=0, max_depth=2):
+    """Crawl links to files of certain extensions from root_url.
+
+    Args:
+        root_url (str): The URL to crawl from.
+        extensions (list): A list of extensions (pdf, csv, doc, ...) to search for.
+        links (dict): Dict of links indexed by extension.
+        visited (list): List of already visited links.
+        count (dict): Dict of link counts indexed by extension.
+        auth (tuple): Authentication tuple if required
+        recurse (bool): Recurse through links on webpage.
+        min_depth (int): The minimum recurse depth.
+        max_depth (int): The maximum recurse depth.
+
+    Returns:
+        links (dict): Dict of file links indexed by extension.
+
+    Example:
+        >>> get_links('http://example.com', ['pdf', 'doc'])
+        {
+            'pdf': [
+                'http://example.com/path/to/a.pdf',
+                'http://example.com/path/to/b.pdf'
+            ],
+            'doc': [
+                'http://example.com/path/to/a.doc',
+                'http://example.com/path/to/b.doc'
+            ]
+        }
+    """
     start = time()
     log.info("-" * 60)
     log.info("-> Processing %s" % root_url)
@@ -22,7 +52,10 @@ def get_links(root_url, extensions, links={}, visited=[], count={}, recurse=True
     parsed_root_uri = urlparse(root_url)
     domain_root = '{uri.scheme}://{uri.netloc}/'.format(uri=parsed_root_uri)
     try:
-        html = requests.get(root_url).content
+        if auth and 'username' in auth and 'password' in auth:
+            log.info("-> Auth is %s / %s" % (auth['username'], auth['password']))
+            auth = (auth['username'], auth['password'])
+        html = requests.get(root_url, auth=auth).content
     except (requests.exceptions.HTTPError, requests.exceptions.SSLError, ValueError) as e:
         log.error("Failed to hit '%s'. Exception: %s" % (root_url, str(e)))
         log.exception(e)
@@ -106,7 +139,7 @@ def get_links(root_url, extensions, links={}, visited=[], count={}, recurse=True
             # Calculate depth and recurse through sublinks
             if recurse is True and min_depth <= depth <= max_depth:
                 log.info("\t\t-> Crawlink links from '%s'. Depth: %s <= [%s] <= %s" % (url, min_depth, depth, max_depth))
-                get_links(url, extensions, links, min_depth=min_depth, max_depth=max_depth)
+                get_links(url, extensions, links, min_depth=min_depth, max_depth=max_depth, auth=auth)
             else:
                 log.info("\t\t-> Depth reached. Not crawlink sublinks.")
 
@@ -117,8 +150,8 @@ def get_links(root_url, extensions, links={}, visited=[], count={}, recurse=True
     return links
 
 def download_all(links, root_dir, subfolders=False):
-    """Takes a dict of extension / list of urls and download them into appropriate
-    directories (create subdirectories if missing).
+    """Takes a dict of links and download them into appropriate directories (also
+    create subdirectories if missing).
 
     Example:
         >>> links = {
@@ -129,6 +162,12 @@ def download_all(links, root_dir, subfolders=False):
         ...     ]
         ... }
         >>> download_all(links, '/tmp/download_folder', subfolders=False)
+
+        Will create following structure:
+            - example.com
+                - path
+                    - to
+                        -
     """
     start = time()
     ensure_dir(root_dir)
@@ -148,6 +187,18 @@ def download_all(links, root_dir, subfolders=False):
     return paths
 
 def download_single(url, download_dir, subfolders=False):
+    """Download file at `url` to `download_dir`.
+    If url has a path and `subfolders` is set to True, the method will create
+    the subdirectories locally as well.
+
+    Args:
+        url (str): The URL to the file to download.
+        download_dir (str): The path to the download directory.
+        subfolders (bool, optional) [False]: Create subfolders to organize crawled files.
+
+    Returns:
+        str: The path the download file.
+    """
     start = time()
     content = requests.get(url).content
     split_url = url.split('/')
@@ -179,9 +230,8 @@ def scrape_files(urls, root_dir):
     Creates a group of Celery task.
     """
     log.info("-> Processing %s URLs" % (len(urls)))
-    download_paths = []
-    g = group(scrape_files_single(u, root_dir) for u in urls)
-    return g()
+    g = group(scrape_files_single.s(u, root_dir) for u in urls)
+    return g.delay()
 
 @app.task()
 def scrape_files_single(url, root_dir):
@@ -203,7 +253,8 @@ def scrape_files_single(url, root_dir):
         root_url=url['url'],
         extensions=url['extensions'],
         recurse=url['recurse'],
-        max_depth=url.get('recurse_depth', DEFAULT_RECURSE_DEPTH))
+        max_depth=url.get('recurse_depth', DEFAULT_RECURSE_DEPTH),
+        auth=url.get('auth'))
     log.debug("-> Links: %s" % pprint.pformat(links))
     fpaths = download_all(links, root_dir, subfolders=url['subfolders'])
     log.debug("-> Paths: %s" % pprint.pformat(fpaths))
@@ -214,28 +265,28 @@ if __name__ == '__main__':
     log.setLevel(logging.INFO)
     ROOT_DIR = 'C:/Users/JahMyst/Desktop/scrapex'
     URLS = [
-        {
-            'name': 'AC Jan MPSI Website',
-            'url': 'http://ac.jan.free.fr',
-            'recurse': True,
-            'subfolders': True,
-            'extensions': ['pdf', 'py', 'ipynb']
-        },
-        {
-            'name': 'KosarKairanvibooks',
-            'url': 'https://archive.org/download/KosarKairanvibooks',
-            'recurse': True,
-            'subfolders': True,
-            'extensions': ['pdf', 'xml', 'zip']
-        },
-        {
-            'name': 'Public Literature',
-            'url': 'http://publicliterature.org',
-            'recurse': True,
-            'recurse_depth': 4,
-            'subfolders': True,
-            'extensions': ['pdf']
-        },
+        # {
+        #     'name': 'AC Jan MPSI Website',
+        #     'url': 'http://ac.jan.free.fr',
+        #     'recurse': True,
+        #     'subfolders': True,
+        #     'extensions': ['pdf', 'py', 'ipynb']
+        # },
+        # {
+        #     'name': 'KosarKairanvibooks',
+        #     'url': 'https://archive.org/download/KosarKairanvibooks',
+        #     'recurse': True,
+        #     'subfolders': True,
+        #     'extensions': ['pdf', 'xml', 'zip']
+        # },
+        # {
+        #     'name': 'Public Literature',
+        #     'url': 'http://publicliterature.org',
+        #     'recurse': True,
+        #     'recurse_depth': 4,
+        #     'subfolders': True,
+        #     'extensions': ['pdf']
+        # },
         {
             'name': 'Liens physique MP',
             'url': 'http://www.thierryalbertin.com/mathematiques.php',
@@ -244,5 +295,17 @@ if __name__ == '__main__':
             'subfolders': True,
             'extensions': ['doc']
         },
+        # {
+        #     'name': 'Navistar',
+        #     'url': 'http://navistar.kmsihosting.com/ihtml/application/student/interface.id/index.htm',
+        #     'recurse': True,
+        #     'recurse_depth': 4,
+        #     'subfolders': True,
+        #     'extensions': ['pdf'],
+        #     'auth': {
+        #         'username': 'uti1031511',
+        #         'password': 'navistar'
+        #     }
+        # },
     ]
-    scrape_files(URLS, ROOT_DIR)
+    scrape_files.delay(URLS, ROOT_DIR)

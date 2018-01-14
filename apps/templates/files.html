@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+  </head>
+  <body>
+    <div class='ui padded container'>
+      </br>
+      <div class='ui segment large header'>
+        Welcome to ScrapEZ !
+      </div>
+      <div class='ui segment'>
+        <div class='ui input'>
+          <input id='search' placeholder="Enter URL ..."></input>
+        </div>
+        <div class='ui input'>
+          <input id='extensions' placeholder="Enter extensions (pdf, csv, doc, ...)"></input>
+        </div>
+        <button class='ui button' id='query'>Scrape !</button>
+        </br></br>
+        <div class='ui checkbox'>
+          <input id='authenticate' type='checkbox'></input>
+          <label>Authenticate</label>
+        </div>
+        </br>
+        <div style='display:none' id='auth'>
+          <div class='ui tiny input'>
+            <input id='username' placeholder='Enter username ...'></input>
+          </div>
+          <div class='ui tiny input'>
+            <input id='password' type='password' placeholder='Enter password ...'></input>
+          </div>
+          </br></br>
+        </div>
+        <div class='ui checkbox'>
+          <input id='recurse' type='checkbox'></input>
+          <label>Recurse</label>
+        </div>
+        </br>
+        <div class='ui tiny input'>
+          <input style="display:none" id='recurse_depth' placeholder='Recurse depth ...'></input>
+        </div>
+      </div>
+      <div class='ui segment' id='results'></div>
+      <div class='ui segment' id='jstree'></div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+    <script>
+      $('#recurse').on('click', function(){
+        $("#recurse_depth").toggle();
+      })
+      $('#authenticate').on('click', function(){
+        $("#auth").toggle();
+      })
+      $('#query').click(function(){
+        url = $('#search').val();
+        extensions = $('#extensions').val();
+        if (url == '' || extensions == ''){
+          var msg = "You must enter a URL and a list of extensions";
+          console.log(msg);
+          $('#results').html(msg)
+          return false;
+        }
+        var data = {
+          url: url,
+          extensions: extensions,
+          auth: {
+            username: $('#username').val(),
+            password: $('#password').val()
+          },
+          recurse: $('#recurse').val() || true,
+          recurse_depth: $('#recurse_depth').val() || 4
+        }
+        console.log(data);
+        $.ajax({
+          method: "POST",
+          url: "/query",
+          data: JSON.stringify(data),
+          contentType: "application/json;charset=utf-8"
+        }).done(function(data) {
+          $('#results').html(data.message);
+          alert(data.message);
+        });
+      })
+
+      // Refresh list by interval
+      var interval = setInterval(function(){
+          $.ajax({
+            method: "GET",
+            url: "/list",
+            success: function(data){
+              console.log(data)
+              $('#jstree').jstree({'core': {
+                  'data' : data
+              }});
+            },
+            error: function(data){
+              console.log("Error while retrieving data")
+              console.log(data)
+            }
+          })
+      }, 5000);
+    </script>
+  </body>
+</html>

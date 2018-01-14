@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Test page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+    {{ JSGlue.include() }}
+    <style media="screen" type="text/css">
+      .item{
+        position: relative;
+      }
+      img{
+        float: left;
+      }
+      .content {
+        margin-left: 130px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class='ui padded container'>
+      </br>
+      <div class='ui segment large header'>
+        Welcome to ScrapEZ !
+      </div>
+      <div class='ui segment'>
+        <div class='ui input'>
+          <input id='search' placeholder="Enter video URL ..."></input>
+        </div>
+        <button class='ui button' id='query'><i class='ui search icon'></i>Search</button>
+        </br></br>
+        </br>
+      <div class='ui segment' id='results'></div>
+    </div>
+    <script
+      src="https://code.jquery.com/jquery-3.2.1.min.js"
+      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+      crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+    <script>
+      var typingTimer;                //timer identifier
+      var doneTypingInterval = 500;   // time in s (5 seconds)
+
+      //on keyup, start the countdown
+      $('#search').keyup(function(){
+          console.log(".")
+          clearTimeout(typingTimer);
+          if ($('#search').val()) {
+              typingTimer = setTimeout(doneTyping, doneTypingInterval);
+          }
+      });
+      function doneTyping() {
+        console.log("Done typing")
+        search_query = $('#search').val();
+        $.ajax({
+          method: "GET",
+          url: Flask.url_for('videos.search_youtube') + "?query=" + search_query,
+          contentType: "application/json;charset=utf-8"
+        }).done(function(data) {
+          console.log(data);
+          var ul = $('<div class="ui padded divided list">').appendTo('body');
+          $(data).each(function(index, item) {
+              var url = item.url
+              var title = item.title
+              // var item = "<div class='ui embed' data-source='youtube' data-id='" + item.id + "' data-placeholder='" + item.thumbnail_url + "'></div>"
+              var item = "<img src='" + item.thumbnail_url + "'/>"
+              $('.ui.embed').embed();
+
+              var header = "<a target='_blank' href='" + url + "' class='header'>" + title + "</a>"
+              item += "<div class='content'>" + header + "</div>"
+
+              var row = $('<div/>', {
+                class: "ui item",
+                css: {
+                  "min-height": "90px",
+                  "padding": "15px"
+                }
+              })
+              if (typeof url != 'undefined'){
+                row.html(item)
+                ul.append(row);
+              }
+          });
+          $('#results').html(ul);
+        });
+      }
+    </script>
+  </body>
+</html>

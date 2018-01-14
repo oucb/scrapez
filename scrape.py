@@ -287,14 +287,14 @@ if __name__ == '__main__':
         #     'subfolders': True,
         #     'extensions': ['pdf']
         # },
-        {
-            'name': 'Liens physique MP',
-            'url': 'http://www.thierryalbertin.com/mathematiques.php',
-            'recurse': True,
-            'recurse_depth': 4,
-            'subfolders': True,
-            'extensions': ['doc']
-        },
+        # {
+        #     'name': 'Liens physique MP',
+        #     'url': 'http://www.thierryalbertin.com/mathematiques.php',
+        #     'recurse': True,
+        #     'recurse_depth': 4,
+        #     'subfolders': True,
+        #     'extensions': ['doc']
+        # },
         # {
         #     'name': 'Navistar',
         #     'url': 'http://navistar.kmsihosting.com/ihtml/application/student/interface.id/index.htm',

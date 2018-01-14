@@ -5,6 +5,7 @@ from pytube import YouTube
 from pytube.cli import on_progress
 import logging
 import pprint
+import lxml
 
 log = logging.getLogger(__name__)
 

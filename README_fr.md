@@ -52,12 +52,12 @@
   **Pour Windows**, vérifier que le service "Redis Server" est lancé (click droit - Démarrer):
   ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
 
-### Démarrer l'interface web de ScrapEZ**
+### Démarrer l'interface web de ScrapEZ
  ```
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
-### Démarrer l'éxecuteur de ScrapEZ (Celery)**
+### Démarrer l'éxecuteur de ScrapEZ (Celery)
   ```
   celery worker -A celeryapp.app -l info -P eventlet
   ```

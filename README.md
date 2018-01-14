@@ -10,11 +10,24 @@
 
 ## Install
 
-* **Install ScrapEZ**
+* **Get ScrapEZ code**
   ```
   git clone https://github.com/ocervell/scrapez.git
+  ```
+  
+* **Create virtualenv**
+  ```
+  pip install virtualenv
+  virtualenv venv/
+  source venv/bin/activate
+  ```
+  **Note:** On Windows, `bin/` is replaced by `Scripts/`, the last line becomes: `source venv/Scripts/activate`
+  
+* **Install ScrapEZ requirements**
+  ```
   pip install -r requirements.txt
   ```
+  
 * **Install Redis**
   
   **On Mac**, make sure you have [XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12), [Macports](https://guide.macports.org/chunked/installing.macports.html) and [Brew](https://brew.sh/) installed, and run:
@@ -23,14 +36,6 @@
   ```
   
   **On Windows**, follow the [installation instructions](https://github.com/rgl/redis/downloads)
-
-* **Create virtualenv**
-  ```
-  pip install virtualenv
-  virtualenv venv/
-  source venv/bin/activate
-  ```
-  **Note:** On Windows, `bin/` is replaced by `Scripts/`, the last line becomes: `source venv/Scripts/activate`
   
 ## Run
 

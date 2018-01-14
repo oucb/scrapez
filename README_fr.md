@@ -59,7 +59,7 @@
   ```
 ### Démarrer l'éxecuteur de ScrapEZ (Celery)
   ```
-  celery worker -A celeryapp.app -l info -P eventlet
+  celery worker -A celeryapp.app -l info
   ```
   
   * L'éxecuteur a pour charge d'exécuter des fonctions qui seraient trop longues dans le contexte d'une requête HTTP (qui possède un timeout et n'est donc pas approprié pour des fonctions lourdes).

@@ -33,7 +33,8 @@
   ```
   
 ### Installer Redis
-  
+  **Pour MacOSX**, vous devez avoir XCode et MacPorts installés.
+  Dans un terminal, taper:
   ```
   brew install redis
   ```

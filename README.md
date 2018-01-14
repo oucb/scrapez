@@ -59,7 +59,7 @@
   ```
 ### Run ScrapEZ Celery worker
   ```
-  celery worker -A celeryapp.app -l info -P eventlet
+  celery worker -A celeryapp.app -l info
   ```
 
 ## Scrape !

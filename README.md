@@ -10,6 +10,14 @@
 
 ## Install
 
+* **Create virtualenv**
+  ```
+  pip install virtualenv
+  virtualenv venv/
+  source venv/bin/activate
+  ```
+  **Note:** On Windows, `bin/` is replaced by `Scripts/`, the last line becomes: `source venv/Scripts/activate`
+  
 * **Install ScrapEZ**
   ```
   git clone https://github.com/ocervell/scrapez.git

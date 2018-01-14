@@ -1,6 +1,6 @@
 # ScrapEZ
 
-ScrapEZ is a web application to scrape websites for files that you are interested in.
+**ScrapEZ** is a web application to scrape websites for files that you are interested in.
 
 * Search and download files from any extension format (pdf, xml, png, css, html, js, ...).
 * Search and download videos and music from popular platforms (YouTube, Vimeo, VK, Spotify, Deezer, Dailymotion, Pandora, ...).

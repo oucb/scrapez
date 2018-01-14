@@ -10,12 +10,12 @@
 
 ## Installation
 
-* **Récupérer le code de ScrapEZ**
+### Récupérer le code de ScrapEZ
   ```
   git clone https://github.com/ocervell/scrapez.git
   ```
   
-* **Créer un environment virtuel avec virtualenv**
+### Créer un environment virtuel avec virtualenv
   ```
   pip install virtualenv
   virtualenv venv/
@@ -23,12 +23,12 @@
   ```
   **Note:** Sur Windows, `bin/` est remplacé par `Scripts/`, la dernière ligne devient: `source venv/Scripts/activate`
   
-* **Installer les packages dont ScrapEZ a besoin**
+### Installer les packages dont ScrapEZ a besoin
   ```
   pip install -r requirements.txt
   ```
   
-* **Installer Redis**
+### Installer Redis
   
   ```
   brew install redis
@@ -38,7 +38,7 @@
   
 ## Execution
 
-* **Démarrer Redis**
+### Démarrer Redis
 
   **Pour Mac**, entrer:
   ```
@@ -48,12 +48,12 @@
   **Pour Windows**, vérifier que le service "Redis Server" est lancé (click droit - Démarrer):
   ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
 
-* **Démarrer l'interface web de ScrapEZ**
+### Démarrer l'interface web de ScrapEZ**
  ```
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
-* **Démarrer l'éxecuteur de ScrapEZ (Celery)**
+### Démarrer l'éxecuteur de ScrapEZ (Celery)**
   ```
   celery worker -A celeryapp.app -l info -P eventlet
   ```
@@ -65,7 +65,5 @@
   * L'éxecuteur récupère les tâches de la liste et les éxecute.
   
 ## Scrape !
-* Visit `localhost:5000`
-* Enter a URL in the search box
-* Enter a list of extensions to search for
-* Click 'Scrape it !'
+* Visiter `localhost:5000/videos`
+* Faites une recherche

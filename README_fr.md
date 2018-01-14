@@ -49,7 +49,7 @@
   ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
 
 * **Démarrer l'interface web de ScrapEZ**
-  ```
+ ```
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
@@ -57,7 +57,13 @@
   ```
   celery worker -A celeryapp.app -l info -P eventlet
   ```
-
+  
+  * L'éxecuteur a pour charge d'exécuter des fonctions qui seraient trop longues dans le contexte d'une requête HTTP (qui possède un timeout et n'est donc pas approprié pour des fonctions lourdes).
+  
+  * L'interface web créee des tâches (`tasks`) et les met dans la file (Redis). 
+  
+  * L'éxecuteur récupère les tâches de la liste et les éxecute.
+  
 ## Scrape !
 * Visit `localhost:5000`
 * Enter a URL in the search box

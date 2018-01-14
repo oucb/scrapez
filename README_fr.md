@@ -1,60 +1,59 @@
 # ScrapEZ
 
-**ScrapEZ** is a web application to scrape websites for files that you are interested in.
+**ScrapEZ** est une application web pour 'scraper' (parcourir) des sites internets:
 
-* Search and download files from any extension format (pdf, xml, png, css, html, js, ...).
-* Search and download videos and music from popular platforms (YouTube, Vimeo, VK, Spotify, Deezer, Dailymotion, Pandora, ...).
-* Organize scraped Music, Documents, Videos and Links.
-* Visualize and categorize Bookmarks and Links.
-* Backup scraped data locally or on the cloud.
+* Rechercher et télécharger des fichiers de n'importe quelle extension (pdf, xml, png, mp4, ...)
+* Rechercher et télécharger des videos et de la musique de n'importe quelle plaforme (YouTube, Vimeo, VK, Spotify, Deezer, ...)
+* Organiser les fichiers par section Music, Documents, Videos, et Liens.
+* Visualiser et catégoriser les marques pages et les liens.
+* Backup les données localement ou sur le cloud.
 
-## Install
+## Installation
 
-* **Get ScrapEZ code**
+* **Récupérer le code de ScrapEZ**
   ```
   git clone https://github.com/ocervell/scrapez.git
   ```
   
-* **Create virtualenv**
+* **Créer un environment virtuel avec virtualenv**
   ```
   pip install virtualenv
   virtualenv venv/
   source venv/bin/activate
   ```
-  **Note:** On Windows, `bin/` is replaced by `Scripts/`, the last line becomes: `source venv/Scripts/activate`
+  **Note:** Sur Windows, `bin/` est remplacé par `Scripts/`, la dernière ligne devient: `source venv/Scripts/activate`
   
-* **Install ScrapEZ requirements**
+* **Installer les packages dont ScrapEZ a besoin**
   ```
   pip install -r requirements.txt
   ```
   
-* **Install Redis**
+* **Installer Redis**
   
-  **On Mac**, make sure you have [XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12), [Macports](https://guide.macports.org/chunked/installing.macports.html) and [Brew](https://brew.sh/) installed, and run:
   ```
   brew install redis
   ```
   
-  **On Windows**, follow the [installation instructions](https://github.com/rgl/redis/downloads)
+  **Pour Windows**, suivre les [instructions d'installation](https://github.com/rgl/redis/downloads)
   
-## Run
+## Execution
 
-* **Run Redis**
+* **Démarrer Redis**
 
-  **On Mac**, run:
+  **Pour Mac**, entrer:
   ```
   redis-server
   ```
   
-  **On Windows**, verify that "Redis Server" service is running (right click -> Start):
+  **Pour Windows**, vérifier que le service "Redis Server" est lancé (click droit - Démarrer):
   ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
 
-* **Run ScrapEZ UI**
+* **Démarrer l'interface web de ScrapEZ**
   ```
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
-* **Run ScrapEZ Celery worker**
+* **Démarrer l'éxecuteur de ScrapEZ (Celery)**
   ```
   celery worker -A celeryapp.app -l info -P eventlet
   ```

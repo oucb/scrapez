@@ -1,15 +1,22 @@
 from flask import Flask
+from flask_jsglue import JSGlue
 from apps.ui.blueprints import BLUEPRINTS
 import os
 import logging
+from config import config
 # tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.DEBUG)
 
-def create_app():
+def create_app(profile=None):
+    if profile is None:
+        profile = os.environ.get('PROFILE', 'default')
+    log.info("Current profile is '%s'" % profile)
+    cfg = config[profile]
     app = Flask(__name__)
+    JSGlue(app)
     register_blueprints(app, BLUEPRINTS)
     return app
 

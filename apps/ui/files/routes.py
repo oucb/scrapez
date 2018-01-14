@@ -11,7 +11,7 @@ ROOT_DIR = 'C:/Users/JahMyst/Desktop/scrapex'
 
 @files.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('files.html')
 
 @files.route('/query', methods=['POST'])
 def query():

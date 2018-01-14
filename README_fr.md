@@ -17,6 +17,7 @@
   
 ### Créer un environment virtuel avec virtualenv
   ```
+  cd scrapez
   pip install virtualenv
   virtualenv venv/
   source venv/bin/activate

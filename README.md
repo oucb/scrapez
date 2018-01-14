@@ -10,13 +10,13 @@ ScrapEZ is a web application to scrape websites for files that you are intereste
 
 ## Install
 
-* Install ScrapEZ
+* **Install ScrapEZ**
   ```
   git clone https://github.com/ocervell/scrapez.git
   pip install -r requirements.txt
   ```
   
-* Install Redis
+* **Install Redis**
   
   **On Mac**, make sure you have [XCode](https://itunes.apple.com/us/app/xcode/id497799835?mt=12), [Macports](https://guide.macports.org/chunked/installing.macports.html) and [Brew](https://brew.sh/) installed, and run:
   ```
@@ -27,7 +27,7 @@ ScrapEZ is a web application to scrape websites for files that you are intereste
   
 ## Run
 
-* Run Redis
+* **Run Redis**
 
   **On Mac**, run:
   ```
@@ -37,12 +37,12 @@ ScrapEZ is a web application to scrape websites for files that you are intereste
   **On Windows**, verify that "Redis Server" service is running (right click -> Start):
   ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
 
-* Run ScrapEZ
+* **Run ScrapEZ UI**
   ```
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
-* Run ScrapEZ Celery worker
+* **Run ScrapEZ Celery worker**
   ```
   celery worker -A celeryapp.app -l info -P eventlet
   ```

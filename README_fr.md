@@ -22,7 +22,10 @@
   virtualenv venv/
   source venv/bin/activate
   ```
-  **Note:** Sur Windows, `bin/` est remplacé par `Scripts/`, la dernière ligne devient: `source venv/Scripts/activate`
+  **Note (Windows):** 
+ 
+  Vous aurez besoin de Cygwin installé avec les packages Python pour lancer ScrapEZ sur Windows.
+  Sur Windows, `bin/` est remplacé par `Scripts/`, la dernière ligne devient: `source venv/Scripts/activate`
   
 ### Installer les packages dont ScrapEZ a besoin
   ```

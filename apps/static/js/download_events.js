@@ -22,7 +22,7 @@ function add_file(item) {
   var title = item.filename;
   var row = [
     "<div class='ui item'>",
-    "<a href='" + url + "' class='ui header'>" + title + "</a>"
+    "<a href='" + url + "' class='ui header'>" + title + "</a>",
     "<div>"
   ].join("");
   $('#results').append(row);

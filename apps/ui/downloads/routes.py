@@ -11,7 +11,7 @@ EXTENSIONS_BLACKLIST = [
     'exe',
     'sh',
     'o',
-    'dll',
+    'dll',\
     'torrent'
 ]
 

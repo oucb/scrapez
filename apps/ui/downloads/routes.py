@@ -1,5 +1,5 @@
 from . import downloads
-from flask import send_from_directory, current_app as app, url_for
+from flask import send_from_directory, current_app as app, url_for, jsonify
 import os
 
 @downloads.route('/<path:filename>')

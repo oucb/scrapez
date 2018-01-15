@@ -1,11 +1,14 @@
 var socket;
 $(document).ready(function(){
+    $('#loader').hide();
     socket = io.connect('http://' + document.domain + ':' + location.port + '/download');
     socket.on('connect', function() {
         console.log("Connected to socket")
         socket.emit('list_files', {});
+        $('#loader').show();
     });
     socket.on('new_file', function(item) {
+      $('#loader').hide();
       add_file(item);
     });
 })

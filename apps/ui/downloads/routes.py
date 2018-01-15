@@ -15,7 +15,7 @@ EXTENSIONS_BLACKLIST = [
     'torrent'
 ]
 
-@downloads.route('/'):
+@downloads.route('/')
 def index():
     return render_template('downloads.html')
 

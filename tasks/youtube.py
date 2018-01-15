@@ -2,9 +2,9 @@ from celery import task, group
 from celery.result import allow_join_result
 from celeryapp import app
 from pytube import YouTube
-from pytube.cli import on_progress
 from flask_socketio import SocketIO
-from time import sleep
+from pytube.cli import display_progress_bar
+import eventlet
 import logging
 import pprint
 import json
@@ -53,7 +53,7 @@ def list_streams(url, order_by='resolution'):
             'streams': streams
         }
         socketio.emit('new_video', data, namespace='/video')
-        sleep(0)
+        eventlet.sleep(0.01)
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
@@ -110,7 +110,6 @@ def get_json_streams(streams):
     res = sorted(res, key=lambda k: k['resolution_int'], reverse=True)
     return res
 
-from pytube.cli import display_progress_bar
 def on_progress(stream, chunk, file_handle, bytes_remaining):
     """On download progress callback function.
     :param object stream:

@@ -18,7 +18,7 @@ def list_downloads():
                 'path': path,
                 'download_url': download_url
             }
-            items.append(path)
+            items.append(item)
     return jsonify({
         'downloads': items
     })

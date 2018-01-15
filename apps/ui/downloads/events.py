@@ -1,10 +1,11 @@
 from flask import session
-from flask_socketio import emit, join_room, leave_room
+from flask_socketio import emit
 from apps.ui.extensions import socketio
 
-@socketio.on('list_downloads', namespace='/download')
-def list_downloads(message):
+@socketio.on('list_files', namespace='/download')
+def list_files(message):
     """List files on local drive and emit 'file_found' event."""
+    log.info("List downloads from drive")
     items = []
     for filename in os.listdir(app.config['DOWNLOAD_FOLDER']):
         extension = filename.split('.')[-1]
@@ -15,4 +16,5 @@ def list_downloads(message):
                 'filename': filename,
                 'download_url': download_url
             }
-            emit('file_found', item, namespace='/download')
+            log.info("Found download: %s" % item)
+            emit('new_file', item, namespace='/download')

@@ -28,7 +28,7 @@ def download(url, itag, output_path=None, filename=None):
         fs=stream.filesize,
     ))
     stream.download(output_path=output_path, filename=stream.default_filename)
-    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video')
+    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video', broadcast=True)
     return os.path.join(output_path, stream.default_filename)
 
 @app.task()

@@ -25,10 +25,9 @@ manager.add_command("runserver", server)
 def run():
     try:
         socketio.run(app,
-                    host='127.0.0.1',
-                    port=5000,
-                    debug=True,
-                    use_reloader=False)
+                     host='127.0.0.1',
+                     port=5000,
+                     use_reloader=False)
     except Exception as e:
         log.exception(e)
     except KeyboardInterrupt:

@@ -8,6 +8,7 @@ import pprint
 from flask_socketio import SocketIO
 from redis import StrictRedis
 import json
+import os
 
 r = StrictRedis()
 socketio = SocketIO(message_queue='redis://', async_mode='threading')
@@ -27,8 +28,9 @@ def download(url, itag, output_path=None, filename=None):
         fn=stream.default_filename,
         fs=stream.filesize,
     ))
-    stream.download(output_path=output_path, filename=filename)
+    stream.download(output_path=output_path, filename=stream.default_filename)
     socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video')
+    return os.path.join(output_path, stream.default_filename)
 
 @app.task()
 def list_streams(url, order_by='resolution'):

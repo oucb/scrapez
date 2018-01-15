@@ -11,7 +11,11 @@ import json
 import os
 
 log = logging.getLogger(__name__)
-socketio = SocketIO(message_queue='redis://', async_mode='threading')
+socketio = SocketIO(
+    message_queue='redis://',
+    async_mode='eventlet',
+    logger=True,
+    engineio_logger=True)
 
 @app.task()
 def download(url, itag, output_path=None, filename=None):
@@ -28,7 +32,7 @@ def download(url, itag, output_path=None, filename=None):
         fs=stream.filesize,
     ))
     stream.download(output_path=output_path, filename=stream.default_filename)
-    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video', broadcast=True)
+    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video')
     return os.path.join(output_path, stream.default_filename)
 
 @app.task()
@@ -41,7 +45,7 @@ def list_streams(url, order_by='resolution'):
     """
     try:
         print("Listing streams for %s" % url)
-        yt = YouTube(url, on_progress_callback=on_progress)
+        yt = YouTube(url)
         streams = yt.streams.order_by(order_by).desc().all()
         streams = get_json_streams(streams)
         print("%s streams found" % len(streams))
@@ -52,7 +56,7 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        socketio.emit('new_video', data, namespace='/video', broadcast=True)
+        socketio.emit('new_video', data, namespace='/video')
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
@@ -124,4 +128,4 @@ def on_progress(stream, chunk, file_handle, bytes_remaining):
     bytes_received = filesize - bytes_remaining
     display_progress_bar(bytes_received, filesize)
     percent = round(100.0 * bytes_received / float(filesize), 1)
-    socketio.emit('progress', {'percent': percent}, namespace='/video', broadcast=True)
+    socketio.emit('progress', {'percent': percent}, namespace='/video')

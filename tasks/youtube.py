@@ -56,7 +56,7 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        socketio.emit('new_video', data, namespace='/video')
+        socketio.emit('new_video', data, namespace='/video', broadcast=True)
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:

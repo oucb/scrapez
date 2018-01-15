@@ -2,4 +2,4 @@ from flask import Blueprint
 
 videos = Blueprint('videos', __name__)
 
-import routes
+import routes, events

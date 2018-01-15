@@ -1,5 +1,4 @@
 from flask import render_template, request, jsonify, current_app as app
-from apps.ui.extensions import socketio
 from . import videos
 from pytube import YouTube
 from tasks.youtube import download as download_yt, \
@@ -44,7 +43,3 @@ def download_youtube_streams():
             'exception_str': str(e),
             'traceback': tb
         })
-
-@socketio.on('test')
-def test_message(message):
-    socketio.emit('test_reponse', {'data': 'got it!'})

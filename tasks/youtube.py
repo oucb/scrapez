@@ -12,7 +12,7 @@ import os
 
 log = logging.getLogger(__name__)
 socketio = SocketIO(
-    message_queue='redis://',
+    message_queue='redis://localhost',
     async_mode='eventlet',
     logger=True,
     engineio_logger=True)
@@ -56,7 +56,7 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        socketio.emit('new_video', data, namespace='/video', broadcast=True)
+        socketio.emit('new_video', data, namespace='/video'e)
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:

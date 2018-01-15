@@ -11,7 +11,7 @@ def list_downloads():
     items = []
     for file in os.listdir(app.config['DOWNLOAD_FOLDER']):
         ext = file.split('.')[-1]
-        if ext not in ['mp4', 'avi']:
+        if ext in ['mp4', 'avi']:
             path = os.path.join(app.config['DOWNLOAD_FOLDER'], file)
             download_url = url_for('downloads.send_file', filename=path)
             item = {

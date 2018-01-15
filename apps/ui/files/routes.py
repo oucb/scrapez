@@ -1,11 +1,12 @@
 from . import files
 from flask import Flask, render_template, jsonify, request
-from flask_socketio import SocketIO
 from celery.result import AsyncResult
 import pprint, logging
 
 app = Flask(__name__)
 log = logging.getLogger(__name__)
+
+ROOT_DIR = 'C:/Users/JahMyst/Desktop/scrapex'
 
 @files.route('/')
 def index():
@@ -29,7 +30,7 @@ def query():
         url_data['subfolders'] = True
     url_data['extensions'] = url_data['extensions'].split(',')
     log.info("-> Creating Celery task ...")
-    r = scrape_files.delay([url_data], app.config['DOWNLOAD_FOLDER'])
+    r = scrape_files.delay([url_data], ROOT_DIR)
     msg = "Task '%s' created" % r.id
     log.info("-> " + msg)
     resp = {
@@ -42,7 +43,7 @@ def query():
 @files.route('/list', methods=['GET'])
 def list_files():
     from utils import get_dir_tree
-    files = get_dir_tree(app.config['DOWNLOAD_FOLDER'])
+    files = get_dir_tree(ROOT_DIR)
     log.info(pprint.pformat(files))
     return jsonify(files)
 

@@ -5,7 +5,6 @@ from apps.ui.extensions import EXTENSIONS
 import os
 import logging
 from config import config
-# tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
@@ -17,10 +16,8 @@ def create_app(profile=None):
     log.info("Current profile is '%s'" % profile)
     cfg = config[profile]
     app = Flask(__name__)
-    app.config.from_object(cfg)
-    JSGlue(app)
-    register_extensions(app, EXTENSIONS)
     register_blueprints(app, BLUEPRINTS)
+    register_extensions(app, EXTENSIONS)
     return app
 
 def register_blueprints(app, blueprints):
@@ -40,18 +37,22 @@ def register_blueprints(app, blueprints):
     log.info("URL Map: %s" % app.url_map)
 
 def register_extensions(app, extensions):
-    """Register all Flask extensiosn with our Flask app.
+    """Register all Flask extensions with our Flask app.
 
     Args:
         app: The Flask application.
-        extensions (list): A list of extensions.
+        blueprints (list): A list of tuple (blueprint, path).
     """
-    for extension in extensions:
-        try:
-            extension.init_app(app)
-            log.info("Extension registered: %s" % extension.__class__.__name__)
-        except Exception as e:
-            log.error("Error registering extension %s" % extension.__class__.__name__)
+    for e in extensions:
+        if isinstance(e, tuple):
+            log.info("Registering extension: %s" % e[0])
+            log.info("Extension config: %s" % e[1])
+            kwargs = e[1]
+            e = e[0]
+        else:
+            log.info("Registering extension: %s" % e)
+            kwargs = {}
+        e.init_app(app, **kwargs)
 
 if __name__ == '__main__':
     app = create_app()

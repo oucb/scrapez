@@ -10,7 +10,7 @@ from redis import StrictRedis
 import json
 
 r = StrictRedis()
-socketio = SocketIO(message_queue='redis://', async_mode='eventlet')
+socketio = SocketIO(message_queue='redis://', async_mode='threading')
 log = logging.getLogger(__name__)
 
 @app.task()

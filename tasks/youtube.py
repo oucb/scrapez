@@ -6,6 +6,8 @@ from pytube.cli import on_progress
 import logging
 import pprint
 import lxml
+from os.path import join
+from apps.ui.extensions import socketio
 
 log = logging.getLogger(__name__)
 
@@ -17,13 +19,20 @@ def download(url, itag, output_path=None, filename=None):
         url (str): A valid YouTube watch URL.
         itag (str): YouTube format identifier code.
     """
-    yt = YouTube(url, on_progress_callback=on_progress)
-    stream = yt.streams.get_by_itag(itag)
+    log.info("Downloading %s (itag: %s)" % (url, itag))
+    yt = YouTube(url)
+    stream = yt.streams.get_by_itag(int(itag))
+    # stream._monostate['on_progress'] = lambda *args, **kwags: False
+    if stream is None:
+        log.info("No stream found for %s - %s" % (url, itag))
+        return False
     log.info('\n{fn} | {fs} bytes'.format(
-        fn=stream.default_filename,
+        fn=filename or stream.default_filename,
         fs=stream.filesize,
     ))
     stream.download(output_path=output_path, filename=filename)
+    log.info("Download completed. Filesize: %s" % stream.filesize)
+    return output_path
 
 @app.task()
 def list_streams(url, order_by='resolution'):
@@ -34,11 +43,11 @@ def list_streams(url, order_by='resolution'):
         order_by (str): A py to order the list of `pytube.Stream` by.
     """
     try:
-        print("Listing streams for %s" % url)
+        log.info("Listing streams for %s" % url)
         yt = YouTube(url)
         streams = yt.streams.order_by(order_by).desc().all()
         streams = get_json_streams(streams)
-        print("%s streams found" % len(streams))
+        log.info("%s streams found" % len(streams))
         data = {
             'url': url,
             'title': yt.title,
@@ -49,7 +58,7 @@ def list_streams(url, order_by='resolution'):
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
-        print("An error occured while listing streams for '%s'" % url)
+        log.info("An error occured while listing streams for '%s'" % url)
         print("Exception: %s - %s" % (type(e).__name__, str(e)))
         return {}
 

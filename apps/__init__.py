@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_jsglue import JSGlue
 from apps.ui.blueprints import BLUEPRINTS
+from apps.ui.extensions import EXTENSIONS
 import os
 import logging
 from config import config
@@ -16,7 +17,9 @@ def create_app(profile=None):
     log.info("Current profile is '%s'" % profile)
     cfg = config[profile]
     app = Flask(__name__)
+    app.config.from_object(cfg)
     JSGlue(app)
+    register_extensions(app, EXTENSIONS)
     register_blueprints(app, BLUEPRINTS)
     return app
 
@@ -35,6 +38,20 @@ def register_blueprints(app, blueprints):
             log.error("Error registering blueprint %s --> %s" % (bp, path))
     log.debug("Registered %s blueprints" % len(blueprints))
     log.info("URL Map: %s" % app.url_map)
+
+def register_extensions(app, extensions):
+    """Register all Flask extensiosn with our Flask app.
+
+    Args:
+        app: The Flask application.
+        extensions (list): A list of extensions.
+    """
+    for extension in extensions:
+        try:
+            extension.init_app(app)
+            log.info("Extension registered: %s" % extension.__class__.__name__)
+        except Exception as e:
+            log.error("Error registering extension %s" % extension.__class__.__name__)
 
 if __name__ == '__main__':
     app = create_app()

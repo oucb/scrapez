@@ -7,8 +7,6 @@ import pprint, logging
 app = Flask(__name__)
 log = logging.getLogger(__name__)
 
-ROOT_DIR = 'C:/Users/JahMyst/Desktop/scrapex'
-
 @files.route('/')
 def index():
     return render_template('files.html')
@@ -31,7 +29,7 @@ def query():
         url_data['subfolders'] = True
     url_data['extensions'] = url_data['extensions'].split(',')
     log.info("-> Creating Celery task ...")
-    r = scrape_files.delay([url_data], ROOT_DIR)
+    r = scrape_files.delay([url_data], app.config['DOWNLOAD_FOLDER'])
     msg = "Task '%s' created" % r.id
     log.info("-> " + msg)
     resp = {
@@ -44,7 +42,7 @@ def query():
 @files.route('/list', methods=['GET'])
 def list_files():
     from utils import get_dir_tree
-    files = get_dir_tree(ROOT_DIR)
+    files = get_dir_tree(app.config['DOWNLOAD_FOLDER'])
     log.info(pprint.pformat(files))
     return jsonify(files)
 

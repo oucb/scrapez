@@ -1,8 +1,13 @@
 from flask_script import Manager, Server
 from apps import create_app
+from apps.ui.extensions import socketio
 import logging
 
 log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG,
+                    filename="scrapez.log",
+                    format='%(asctime)s %(message)s',
+                    handlers=[logging.StreamHandler()])
 
 app = create_app()
 manager = Manager(app)
@@ -13,6 +18,13 @@ class CustomServer(Server):
 
 server = CustomServer(host="0.0.0.0", port=5000)
 manager.add_command("runserver", server)
+
+@manager.command
+def run():
+   socketio.run(app,
+                host='127.0.0.1',
+                port=5000,
+                use_reloader=False)
 
 if __name__ == '__main__':
     try:

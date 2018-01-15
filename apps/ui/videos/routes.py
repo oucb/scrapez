@@ -1,14 +1,19 @@
 from flask import render_template, request, jsonify, current_app as app
+from apps.ui.extensions import socketio
 from . import videos
 from pytube import YouTube
-from tasks.youtube import download as downlad_yt, \
+from tasks.youtube import download as download_yt, \
                           list_streams as list_yt_streams, \
                           search as search_yt
+import traceback
 
 @videos.route('/')
 def index():
     return render_template('videos.html')
 
+#----------------#
+# Youtube routes #
+#----------------#
 @videos.route('/youtube/search')
 def search_youtube():
     query = request.args['query']
@@ -26,14 +31,20 @@ def download_youtube_streams():
     url = request.args['url']
     itag = request.args['itag']
     try:
-        download_yt(url, itag, app.config['DOWNLOAD_FOLDER'])
+        download_yt(url, itag, output_path=app.config['DOWNLOAD_FOLDER'], filename=request.args.get('filename'))
         return jsonify({
-            'success': True,
-            'output_path': output_path
+            'download_folder': app.config['DOWNLOAD_FOLDER'],
+            'success': True
         })
     except Exception as e:
+        tb = traceback.format_exc(e)
         return jsonify({
             'success': False,
             'exception_class': type(e).__name__,
-            'exception_str': str(e)
+            'exception_str': str(e),
+            'traceback': tb
         })
+
+@socketio.on('test')
+def test_message(message):
+    socketio.emit('test_reponse', {'data': 'got it!'})

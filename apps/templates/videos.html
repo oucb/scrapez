@@ -40,6 +40,8 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/events.js') }}"></script>
     <script>
       var typingTimer;                //timer identifier
       var doneTypingInterval = 500;   // time in s (5 seconds)
@@ -52,6 +54,19 @@
               typingTimer = setTimeout(doneTyping, doneTypingInterval);
           }
       });
+
+      // $('.ui.download.button').on('click', function(){
+      //   var dp = $(this).parent().find('.ui.resolution.dropdown');
+      //   var value = dp.val();
+      //   $.ajax({
+      //     method: "GET",
+      //     url: Flask.url_for('videos.download_youtube') + "?itag=" + url,
+      //     contentType: "application/json;charset=utf-8"
+      //   }).done(function(data)){
+      //     console.log(data)
+      //   }
+      // })
+
       function doneTyping() {
         console.log("Done typing")
         search_query = $('#search').val();
@@ -66,12 +81,11 @@
               var url = item.url
               var title = item.title
               // var item = "<div class='ui embed' data-source='youtube' data-id='" + item.id + "' data-placeholder='" + item.thumbnail_url + "'></div>"
+              // $('.ui.embed').embed();
               var item = "<img src='" + item.thumbnail_url + "'/>"
-              $('.ui.embed').embed();
-
               var header = "<a target='_blank' href='" + url + "' class='header'>" + title + "</a>"
+              var buttons = "<button class='ui download button'>Save</button>"
               item += "<div class='content'>" + header + "</div>"
-
               var row = $('<div/>', {
                 class: "ui item",
                 css: {

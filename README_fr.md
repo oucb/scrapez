@@ -59,12 +59,12 @@
   python manage.py runserver --threaded -d -r
   >> App running on 5000 ...
   ```
-### Démarrer l'éxecuteur de ScrapEZ (Celery)
+### Démarrer l'exécuteur de ScrapEZ (Celery)
   ```
   celery worker -A celeryapp.app -l info
   ```
   
-  * L'éxecuteur a pour charge d'exécuter des fonctions qui seraient trop longues dans le contexte d'une requête HTTP (qui possède un timeout et n'est donc pas approprié pour des fonctions lourdes).
+  * L'exécuteur a pour charge d'exécuter des fonctions qui seraient trop longues dans le contexte d'une requête HTTP (qui possède un timeout et n'est donc pas approprié pour des fonctions lourdes).
   
   * L'interface web créee des tâches (`tasks`) et les met dans la file (Redis). 
   

@@ -3,16 +3,15 @@ from celery.result import allow_join_result
 from celeryapp import app
 from pytube import YouTube
 from pytube.cli import on_progress
+from flask_socketio import SocketIO
+from time import sleep
 import logging
 import pprint
-from flask_socketio import SocketIO
-from redis import StrictRedis
 import json
 import os
 
-r = StrictRedis()
-socketio = SocketIO(message_queue='redis://', async_mode='threading')
 log = logging.getLogger(__name__)
+socketio = SocketIO(message_queue='redis://', async_mode='threading')
 
 @app.task()
 def download(url, itag, output_path=None, filename=None):
@@ -40,9 +39,6 @@ def list_streams(url, order_by='resolution'):
         url (str): A valid YouTube watch URL.
         order_by (str): A py to order the list of `pytube.Stream` by.
     """
-    # cached = r.get(url)
-    # log.info("Cached result: %s" % cached)
-    # if cached is not None: return json.loads(cached)
     try:
         print("Listing streams for %s" % url)
         yt = YouTube(url, on_progress_callback=on_progress)
@@ -56,8 +52,8 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        r.set(url, data)
         socketio.emit('new_video', data, namespace='/video')
+        sleep(0)
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:

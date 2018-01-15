@@ -1,6 +1,9 @@
 from flask import session
 from flask_socketio import emit
 from apps.ui.extensions import socketio
+import logging
+
+log = logging.getLogger(__name__)
 
 @socketio.on('list_files', namespace='/download')
 def list_files(message):

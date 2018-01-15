@@ -16,6 +16,7 @@ def create_app(profile=None):
     log.info("Current profile is '%s'" % profile)
     cfg = config[profile]
     app = Flask(__name__)
+    app.config.from_object(cfg)
     register_blueprints(app, BLUEPRINTS)
     register_extensions(app, EXTENSIONS)
     return app

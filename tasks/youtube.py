@@ -5,7 +5,12 @@ from pytube import YouTube
 from pytube.cli import on_progress
 import logging
 import pprint
+from flask_socketio import SocketIO
+from redis import StrictRedis
+import json
 
+r = StrictRedis()
+socketio = SocketIO(message_queue='redis://', async_mode='eventlet')
 log = logging.getLogger(__name__)
 
 @app.task()
@@ -23,6 +28,7 @@ def download(url, itag, output_path=None, filename=None):
         fs=stream.filesize,
     ))
     stream.download(output_path=output_path, filename=filename)
+    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video')
 
 @app.task()
 def list_streams(url, order_by='resolution'):
@@ -32,9 +38,12 @@ def list_streams(url, order_by='resolution'):
         url (str): A valid YouTube watch URL.
         order_by (str): A py to order the list of `pytube.Stream` by.
     """
+    # cached = r.get(url)
+    # log.info("Cached result: %s" % cached)
+    # if cached is not None: return json.loads(cached)
     try:
         print("Listing streams for %s" % url)
-        yt = YouTube(url)
+        yt = YouTube(url, on_progress_callback=on_progress)
         streams = yt.streams.order_by(order_by).desc().all()
         streams = get_json_streams(streams)
         print("%s streams found" % len(streams))
@@ -45,6 +54,8 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
+        r.set(url, data)
+        socketio.emit('new_video', data, namespace='/video')
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
@@ -91,5 +102,30 @@ def get_json_streams(streams):
         data = s.fmt_profile
         data['itag'] = s.itag
         data['mime_type'] = s.mime_type
-        res.append(data)
+        log.info("resolution: %s" % data['resolution'])
+        if data['resolution']:
+            data['resolution_int'] = int(data['resolution'].rstrip('p'))
+        else:
+            data['resolution_int'] = 0
+        if s.mime_type not in ['video/webm', 'video/3gpp']:
+            res.append(data)
+    res = sorted(res, key=lambda k: k['resolution_int'], reverse=True)
     return res
+
+from pytube.cli import display_progress_bar
+def on_progress(stream, chunk, file_handle, bytes_remaining):
+    """On download progress callback function.
+    :param object stream:
+        An instance of :class:`Stream <Stream>` being downloaded.
+    :param file_handle:
+        The file handle where the media is being written to.
+    :type file_handle:
+        :py:class:`io.BufferedWriter`
+    :param int bytes_remaining:
+        How many bytes have been downloaded.
+    """
+    filesize = stream.filesize
+    bytes_received = filesize - bytes_remaining
+    display_progress_bar(bytes_received, filesize)
+    percent = round(100.0 * bytes_received / float(filesize), 1)
+    socketio.emit('progress', {'percent': percent}, namespace='/video')

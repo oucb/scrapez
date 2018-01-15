@@ -30,8 +30,31 @@
         </div>
         <button class='ui button' id='query'><i class='ui search icon'></i>Search</button>
         </br></br>
-        </br>
-      <div class='ui segment' id='results'></div>
+      </div>
+      <!-- <div id='loader' class='ui segment'>
+        <div class="ui active inverted dimmer">
+          <p></p>
+          <div class="ui small text inline loader">Loading cool stuff</div>
+          <p></p>
+        </div>
+      </div> -->
+      <div class='ui segment'>
+        <div id='results_header'>
+          <div class='ui header'>Results</div>
+          <p data-number=0 id='nresults'>No results found.</p>
+        </div>
+        <div id='loader' width="50%" class="ui icon message">
+          <i class="notched circle loading icon"></i>
+          <div class="content">
+            <div class="header">
+              Searching for videos ...
+            </div>
+            <p>We're looking on YouTube for some content.</p>
+          </div>
+        </div>
+        <div id='results' class="ui padded celled list">
+        </div>
+      </div>
     </div>
     <script
       src="https://code.jquery.com/jquery-3.2.1.min.js"
@@ -40,51 +63,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
-    <script>
-      var typingTimer;                //timer identifier
-      var doneTypingInterval = 500;   // time in s (5 seconds)
-
-      //on keyup, start the countdown
-      $('#search').keyup(function(){
-          console.log(".")
-          clearTimeout(typingTimer);
-          if ($('#search').val()) {
-              typingTimer = setTimeout(doneTyping, doneTypingInterval);
-          }
-      });
-      function doneTyping() {
-        console.log("Done typing")
-        search_query = $('#search').val();
-        $.ajax({
-          method: "GET",
-          url: Flask.url_for('videos.search_youtube') + "?query=" + search_query,
-          contentType: "application/json;charset=utf-8"
-        }).done(function(data) {
-          console.log(data);
-          var ul = $('<div class="ui padded divided list">').appendTo('body');
-          $(data).each(function(index, item) {
-              var url = item.url
-              var title = item.title
-              // var item = "<div class='ui embed' data-source='youtube' data-id='" + item.id + "' data-placeholder='" + item.thumbnail_url + "'></div>"
-              // $('.ui.embed').embed();
-              var item = "<img src='" + item.thumbnail_url + "'/>"
-              var header = "<a target='_blank' href='" + url + "' class='header'>" + title + "</a>"
-              item += "<div class='content'>" + header + "</div>"
-              var row = $('<div/>', {
-                class: "ui item",
-                css: {
-                  "min-height": "90px",
-                  "padding": "15px"
-                }
-              })
-              if (typeof url != 'undefined'){
-                row.html(item)
-                ul.append(row);
-              }
-          });
-          $('#results').html(ul);
-        });
-      }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/video_events.js') }}"></script>
   </body>
 </html>

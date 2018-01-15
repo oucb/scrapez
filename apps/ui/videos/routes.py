@@ -4,15 +4,11 @@ from pytube import YouTube
 from tasks.youtube import download as download_yt, \
                           list_streams as list_yt_streams, \
                           search as search_yt
-import traceback
 
 @videos.route('/')
 def index():
     return render_template('videos.html')
 
-#----------------#
-# Youtube routes #
-#----------------#
 @videos.route('/youtube/search')
 def search_youtube():
     query = request.args['query']
@@ -26,20 +22,23 @@ def list_youtube_streams():
     return jsonify(data)
 
 @videos.route('/youtube/download')
-def download_youtube_streams():
+def download_youtube():
     url = request.args['url']
-    itag = request.args['itag']
+    itag = request.args['itag'].rstrip(',')
+    app.logger.info("Downloading %s with itag %s" % (url, itag))
+    print("Downloading %s with itag %s" % (url, itag))
+    # print("Download folder: %s" % app.config['DOWNLOAD_FOLDER'])
     try:
-        download_yt(url, itag, output_path=app.config['DOWNLOAD_FOLDER'], filename=request.args.get('filename'))
+        res = download_yt.delay(url, itag, output_path=app.config['DOWNLOAD_FOLDER'])
         return jsonify({
-            'download_folder': app.config['DOWNLOAD_FOLDER'],
-            'success': True
+            'success': True,
+            'message': 'Your video is downloading',
+            'id': res.id
+            # 'output_path': app.config['DOWNLOAD_FOLDER']
         })
     except Exception as e:
-        tb = traceback.format_exc(e)
         return jsonify({
             'success': False,
             'exception_class': type(e).__name__,
-            'exception_str': str(e),
-            'traceback': tb
+            'exception_str': str(e)
         })

@@ -52,8 +52,7 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        socketio.emit('new_video', data, namespace='/video')
-        eventlet.sleep(0.01)
+        socketio.emit('new_video', data, namespace='/video', broadcast=True)
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
@@ -125,4 +124,4 @@ def on_progress(stream, chunk, file_handle, bytes_remaining):
     bytes_received = filesize - bytes_remaining
     display_progress_bar(bytes_received, filesize)
     percent = round(100.0 * bytes_received / float(filesize), 1)
-    socketio.emit('progress', {'percent': percent}, namespace='/video')
+    socketio.emit('progress', {'percent': percent}, namespace='/video', broadcast=True)

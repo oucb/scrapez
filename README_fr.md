@@ -68,7 +68,7 @@
   
   * L'interface web créee des tâches (`tasks`) et les met dans la file (Redis). 
   
-  * L'éxecuteur récupère les tâches de la liste et les éxecute.
+  * L'exécuteur récupère les tâches de la liste et les éxecute.
   
 ## Scrape !
 * Visiter `localhost:5000/videos`

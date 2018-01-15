@@ -1,4 +1,4 @@
-from flask import session, url_for
+from flask import session, url_for, current_app as app
 from flask_socketio import emit
 from apps.ui.extensions import socketio
 import logging

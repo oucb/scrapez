@@ -1,5 +1,5 @@
 from . import downloads
-from flask import send_from_directory, current_app as app, url_for, jsonify
+from flask import send_from_directory, current_app as app, url_for, jsonify, render_template
 import os
 
 EXTENSIONS_WHITELIST = [
@@ -14,6 +14,10 @@ EXTENSIONS_BLACKLIST = [
     'dll',\
     'torrent'
 ]
+
+@downloads.route('/'):
+def index():
+    return render_template('downloads.html')
 
 @downloads.route('/<path:filename>')
 def send_file(filename):

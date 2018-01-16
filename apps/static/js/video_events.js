@@ -16,6 +16,7 @@ $(document).ready(function(){
     })
     socket.on('progress', function(item){
       console.log(item.percent);
+      console.log(item.url + ' :' + item.percent)
     })
     $('#loader').hide();
 

@@ -1,69 +1,32 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Test page</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
-    {{ JSGlue.include() }}
-    <style media="screen" type="text/css">
-      .item{
-        position: relative;
-      }
-      img{
-        float: left;
-      }
-      .content {
-        margin-left: 130px;
-      }
-    </style>
-  </head>
-  <body>
-    <div class='ui padded container'>
-      </br>
-      <div class='ui segment large header'>
-        Welcome to ScrapEZ !
-      </div>
-      <div class='ui segment'>
-        <div class='ui input'>
-          <input id='search' placeholder="Search for a video ..."></input>
+{% extends 'layout.html' %}
+
+{% jss_assets %}
+  <script src="{{ url_for('static', filename='js/video_events.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class='ui segment'>
+    <div class='ui input'>
+      <input id='search' placeholder="Search for a video ..."></input>
+    </div>
+    <button class='ui button' id='query'><i class='ui search icon'></i>Search</button>
+    </br></br>
+  </div>
+  <div class='ui segment'>
+    <div id='results_header'>
+      <div class='ui header'>Results</div>
+      <p data-number=0 id='nresults'>No results found.</p>
+    </div>
+    <div id='loader' width="50%" class="ui icon message">
+      <i class="notched circle loading icon"></i>
+      <div class="content">
+        <div class="header">
+          Searching for videos ...
         </div>
-        <button class='ui button' id='query'><i class='ui search icon'></i>Search</button>
-        </br></br>
-      </div>
-      <!-- <div id='loader' class='ui segment'>
-        <div class="ui active inverted dimmer">
-          <p></p>
-          <div class="ui small text inline loader">Loading cool stuff</div>
-          <p></p>
-        </div>
-      </div> -->
-      <div class='ui segment'>
-        <div id='results_header'>
-          <div class='ui header'>Results</div>
-          <p data-number=0 id='nresults'>No results found.</p>
-        </div>
-        <div id='loader' width="50%" class="ui icon message">
-          <i class="notched circle loading icon"></i>
-          <div class="content">
-            <div class="header">
-              Searching for videos ...
-            </div>
-            <p>We're looking on YouTube for some content.</p>
-          </div>
-        </div>
-        <div id='results' class="ui padded celled list">
-        </div>
+        <p>We're looking on YouTube for some content.</p>
       </div>
     </div>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.min.js"
-      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-      crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='js/video_events.js') }}"></script>
-  </body>
-</html>
+    <div id='results' class="ui padded celled list">
+    </div>
+  </div>
+{% endblock}

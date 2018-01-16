@@ -1,61 +1,47 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Test page</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
-    {{ JSGlue.include() }}
-  </head>
-  <body>
-    <div class='ui padded container'>
-      </br>
-      <div class='ui segment large header'>
-        Welcome to ScrapEZ !
-      </div>
-      <div class='ui segment'>
-        <div class='ui input'>
-          <input id='search' placeholder="Enter URL ..."></input>
-        </div>
-        <div class='ui input'>
-          <input id='extensions' placeholder="Enter extensions (pdf, csv, doc, ...)"></input>
-        </div>
-        <button class='ui button' id='query'>Scrape !</button>
-        </br></br>
-        <div class='ui checkbox'>
-          <input id='authenticate' type='checkbox'></input>
-          <label>Authenticate</label>
-        </div>
-        </br>
-        <div style='display:none' id='auth'>
-          <div class='ui tiny input'>
-            <input id='username' placeholder='Enter username ...'></input>
-          </div>
-          <div class='ui tiny input'>
-            <input id='password' type='password' placeholder='Enter password ...'></input>
-          </div>
-          </br></br>
-        </div>
-        <div class='ui checkbox'>
-          <input id='recurse' type='checkbox'></input>
-          <label>Recurse</label>
-        </div>
-        </br>
-        <div class='ui tiny input'>
-          <input style="display:none" id='recurse_depth' placeholder='Recurse depth ...'></input>
-        </div>
-      </div>
-      <div class='ui segment' id='results'></div>
-      <div class='ui segment' id='jstree'></div>
+{% extends "layout.html" %}
+
+{% block css_assets %}
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
+{% endblock %}
+
+{% block js_assets %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
+  <script src="{{ url_for('static', filename='js/home_events.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class='ui segment'>
+    <div class='ui input'>
+      <input id='search' placeholder="Enter URL ..."></input>
     </div>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.min.js"
-      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-      crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
-    <script src="{{ url_for('static', filename='js/home_events.js') }}"></script>
-    </script>
-  </body>
-</html>
+    <div class='ui input'>
+      <input id='extensions' placeholder="Enter extensions (pdf, csv, doc, ...)"></input>
+    </div>
+    <button class='ui button' id='query'>Scrape!</button>
+    </br></br>
+    <div class='ui checkbox'>
+      <input id='authenticate' type='checkbox'></input>
+      <label>Authenticate</label>
+    </div>
+    </br>
+    <div style='display:none' id='auth'>
+      <div class='ui tiny input'>
+        <input id='username' placeholder='Enter username ...'></input>
+      </div>
+      <div class='ui tiny input'>
+        <input id='password' type='password' placeholder='Enter password ...'></input>
+      </div>
+      </br></br>
+    </div>
+    <div class='ui checkbox'>
+      <input id='recurse' type='checkbox'></input>
+      <label>Recurse</label>
+    </div>
+    </br>
+    <div class='ui tiny input'>
+      <input style="display:none" id='recurse_depth' placeholder='Recurse depth ...'></input>
+    </div>
+  </div>
+  <div class='ui segment' id='results'></div>
+  <div class='ui segment' id='jstree'></div>
+{% endblock %}

@@ -1,33 +1,23 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Test page</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
-    {{ JSGlue.include() }}
-  </head>
-  <body>
-    <div class='ui padded container'>
-      </br>
-      <div class='ui segment large header'>
-        Welcome to ScrapEZ !
-      </div>
-      <div class='ui segment' id='flask_chat'>
-        <div class='ui small header'>ScrapEZ chat</div>
-        <textarea id="chat" cols="80" rows="5"></textarea><br><br>
-        <input id="text" size="80" placeholder="Enter your message here"><br><br>
-        <!-- <a href="#" onclick="leave_room();">Leave this room</a> -->
-      </div>
+{% extends 'layout.html' %}
+
+{% block js_assets %}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
+  <script src="{{ url_for('static', filename='js/chat_events.js') }}"></script>
+{% endblock %}
+
+{% block body %}
+  <div class='ui padded container'>
+    </br>
+    <div class='ui segment large header'>
+      Welcome to ScrapEZ !
     </div>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.min.js"
-      integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-      crossorigin="anonymous">
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.4/socket.io.js"></script>
-    <script src="{{ url_for('static', filename='js/chat_events.js') }}"></script>
-  </body>
-</html>
+    <div class='ui segment' id='flask_chat'>
+      <div class='ui small header'>ScrapEZ chat</div>
+      <textarea id="chat" cols="80" rows="5"></textarea><br><br>
+      <input id="text" size="80" placeholder="Enter your message here"><br><br>
+      <!-- <a href="#" onclick="leave_room();">Leave this room</a> -->
+    </div>
+  </div>
+{% endblock %}

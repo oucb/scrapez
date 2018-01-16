@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(message)s',
                     handlers=[logging.StreamHandler()])
 
-app = create_app()
+app = create_app(ssl=True)
 manager = Manager(app)
 
 class CustomServer(Server):

@@ -11,9 +11,8 @@
     {% block css_assets %} <!-- Override in other templates --> {% endblock %}
   </head>
   <body>
-    {% include "navbar.html" %}
     <div class='ui padded container'>
-      <div class='ui segment large header'>ScrapEZ</div>
+      {% include "navbar.html" %}
       {% block body %} <!-- Override in other templates --> {% endblock %}
     </div>
     {% block js_core_assets %}

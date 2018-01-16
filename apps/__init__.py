@@ -17,6 +17,7 @@ def create_app(profile=None):
     cfg = config[profile]
     app = Flask(__name__)
     app.config.from_object(cfg)
+    app.url_map.strict_slashes = False
     register_blueprints(app, BLUEPRINTS)
     register_extensions(app, EXTENSIONS)
     return app

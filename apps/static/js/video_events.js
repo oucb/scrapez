@@ -104,10 +104,18 @@ function add_video(item) {
         $(this).parent().find('.ui.download.button').removeClass('disabled')
       }
     })
-    $('.ui.dropdown').dropdown('refresh');
-    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('refresh');
-    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set selected', String(s.itag));
-    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set text', s.resolution + " (" + s.mime_type +")");
+
+    var $dropdown = $(row).find('.ui.dropdown')
+    console.log("Dropdown resolution: ")
+    console.log($dropdown)
+    $dropdown.dropdown('refresh')
+    $dropdown.dropdown('set selected', String(s.itag));
+    $dropdown.dropdown('set text', s.resolution + " (" + s.mime_type +")");
+    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('refresh');
+    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set selected', String(s.itag));
+    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set text', s.resolution + " (" + s.mime_type +")");
+
+    // Downloaded
     $('.ui.download.button').on('click', function(){
       var itag = $(this).parent().find('.ui.dropdown').dropdown('get value');
       var url = $(this).parent().find('.header').attr('href');

@@ -5,22 +5,19 @@
     </button>
     <a class="navbar-brand" href="{{ url_for('home.index') }}">ScrapEZ</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto nav nav-pills">
+      <ul class="mr-auto nav nav-pills head-menu">
         <li class="nav-item active">
-          <i class='ui home icon'></i>
-          <a class="nav-link" href="{{ url_for('home.index') }}">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-link active" href="{{ url_for('home.index') }}"<i class='ui home icon'></i>Home <span class="sr-only">(current)</span></a>
         </li>
         <li class="nav-item">
           <i class='ui video play icon'></i>
           <a class="nav-link" href="{{ url_for('videos.index') }}">Videos</a>
         </li>
         <li class="nav-item">
-          <i class='ui download icon'></i>
-          <a class="nav-link" href="{{ url_for('downloads.index') }}">Downloads</a>
+          <a class="nav-link" href="{{ url_for('downloads.index') }}"><i class='ui download icon'></i>Downloads</a>
         </li>
         <li class="nav-item">
-          <i class='ui keyboard icon'></i>
-          <a class="nav-link" href="{{ url_for('chat.index') }}">Chat</a>
+          <a class="nav-link" href="{{ url_for('chat.index') }}"><i class='ui keyboard icon'></i>Chat</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">

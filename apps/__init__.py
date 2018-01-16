@@ -10,13 +10,14 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.DEBUG)
 
-def create_app(profile=None):
+def create_app(profile=None, ssl=False):
     if profile is None:
         profile = os.environ.get('PROFILE', 'default')
     log.info("Current profile is '%s'" % profile)
     cfg = config[profile]
     app = Flask(__name__)
-    sslify = SSLify(app)
+    if ssl:
+        sslify = SSLify(app)
     app.config.from_object(cfg)
     app.url_map.strict_slashes = False
     register_blueprints(app, BLUEPRINTS)

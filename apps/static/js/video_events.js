@@ -104,7 +104,7 @@ function add_video(item) {
         $(this).parent().find('.ui.download.button').removeClass('disabled')
       }
     })
-    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown();
+    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('refresh');
     $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set selected', String(s.itag));
     $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set text', s.resolution + " (" + s.mime_type +")");
     $('.ui.download.button').on('click', function(){

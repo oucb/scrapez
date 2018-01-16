@@ -18,7 +18,7 @@ def text(message):
     """Sent by a client when the user entered a new message.
     The message is sent to all people in the room."""
     room = session.get('room', 'default')
-    name = session.get('name') or message.get('name', 'unknown')
+    name = session.get('name', 'unknown')
     msg = message['msg']
     full_msg = name + ': ' + msg
     print("Chat message --> %s (room '%s')" % (full_msg, room))

@@ -14,6 +14,8 @@ $(document).ready(function(){
         write_chat('#chat', data.msg)
     });
     socket.on('name_changed', function(data){
+      console.log("name change data");
+      console.log(data);
       var old_name = data.old_name;
       var new_name = data.new_name;
       var msg = "<'" + data.old_name + "' changed his name to '" + data.new_name + "'>"

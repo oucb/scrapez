@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-files = Blueprint('files', __name__)
+home = Blueprint('home', __name__)
 
 import routes

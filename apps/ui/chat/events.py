@@ -28,9 +28,10 @@ def text(message):
 def text(message):
     old_name = session.get('name', 'unknown')
     new_name = message.get('name', 'unknown')
+    room = session.get('room', 'default')
     if not new_name == old_name:
         print("'%s' changed name to '%s'" % (old_name, new_name))
-        emit('name_changed', {old_name: old_name, new_name: new_name})
+        emit('name_changed', {old_name: old_name, new_name: new_name}, room=room)
 
 @socketio.on('left', namespace='/chat')
 def left(message):

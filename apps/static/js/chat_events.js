@@ -12,7 +12,6 @@ $(document).ready(function(){
     });
     socket.on('message', function(data) {
         console.log("Message event received.")
-        console.log("Adding" + data.msg + " to chat")
         $('#chat').val($('#chat').val() + data.msg + '\n');
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
     });

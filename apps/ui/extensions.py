@@ -8,8 +8,6 @@ eventlet.monkey_patch(socket=True)
 socketio = SocketIO()
 jsglue = JSGlue()
 cache = Cache()
-sslify = SSLify()
-
 
 EXTENSIONS = [
     (cache, {'config': {'CACHE_TYPE': 'redis', 'CACHE_REDIS_URL': 'redis://localhost'}}),

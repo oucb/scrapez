@@ -16,6 +16,7 @@ def create_app(profile=None):
     log.info("Current profile is '%s'" % profile)
     cfg = config[profile]
     app = Flask(__name__)
+    sslify = SSLify(app)
     app.config.from_object(cfg)
     app.url_map.strict_slashes = False
     register_blueprints(app, BLUEPRINTS)

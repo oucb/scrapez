@@ -44,6 +44,6 @@ function leave_room() {
 }
 
 function write_chat(selector, message){
-  $(selector).val($(selector).val() + data.msg + '\n');
+  $(selector).val($(selector).val() + message + '\n');
   $(selector).scrollTop($(selector)[0].scrollHeight);
 }

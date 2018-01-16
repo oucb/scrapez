@@ -105,15 +105,17 @@ function add_video(item) {
       }
     })
 
-    var $dropdown = $(row).find('.ui.dropdown')
-    console.log("Dropdown resolution: ")
-    console.log($dropdown)
-    $dropdown.dropdown('refresh')
-    $dropdown.dropdown('set selected', String(s.itag));
-    $dropdown.dropdown('set text', s.resolution + " (" + s.mime_type +")");
-    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('refresh');
-    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set selected', String(s.itag));
-    // $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set text', s.resolution + " (" + s.mime_type +")");
+    // Refresh dropdown and set default values (best resolution)
+    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('refresh');
+    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set selected', String(s.itag));
+    $('a[href="' + item.url + '"]').parent().find('.ui.dropdown').dropdown('set text', s.resolution + " (" + s.mime_type +")");
+    // TODO: Replace above by following
+    // var $dropdown = $(row).find('.ui.dropdown')
+    // console.log("Dropdown resolution: ")
+    // console.log($dropdown)
+    // $dropdown.dropdown('refresh')
+    // $dropdown.dropdown('set selected', String(s.itag));
+    // $dropdown.dropdown('set text', s.resolution + " (" + s.mime_type +")");
 
     // Downloaded
     $('.ui.download.button').on('click', function(){

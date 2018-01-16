@@ -5,7 +5,7 @@ from apps.ui.downloads import downloads as downloads_bp
 from apps.ui.chat import chat as chat_bp
 
 BLUEPRINTS = [
-    (home_bp, '/home'),
+    (home_bp, '/'),
     (links_bp, '/links'),
     (videos_bp, '/videos'),
     (downloads_bp, '/downloads'),

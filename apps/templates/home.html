@@ -5,6 +5,7 @@
     <title>Test page</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/themes/default/style.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.css"/>
+    {{ JSGlue.include() }}
   </head>
   <body>
     <div class='ui padded container'>
@@ -54,61 +55,7 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.5/jstree.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.9/semantic.min.js"></script>
-    <script>
-      $('#recurse').on('click', function(){
-        $("#recurse_depth").toggle();
-      })
-      $('#authenticate').on('click', function(){
-        $("#auth").toggle();
-      })
-      $('#query').click(function(){
-        url = $('#search').val();
-        extensions = $('#extensions').val();
-        if (url == '' || extensions == ''){
-          var msg = "You must enter a URL and a list of extensions";
-          console.log(msg);
-          $('#results').html(msg)
-          return false;
-        }
-        var data = {
-          url: url,
-          extensions: extensions,
-          auth: {
-            username: $('#username').val(),
-            password: $('#password').val()
-          },
-          recurse: $('#recurse').val() || true,
-          recurse_depth: $('#recurse_depth').val() || 4
-        }
-        console.log(data);
-        $.ajax({
-          method: "POST",
-          url: "/query",
-          data: JSON.stringify(data),
-          contentType: "application/json;charset=utf-8"
-        }).done(function(data) {
-          $('#results').html(data.message);
-          alert(data.message);
-        });
-      })
-
-      // Refresh list by interval
-      var interval = setInterval(function(){
-          $.ajax({
-            method: "GET",
-            url: "/list",
-            success: function(data){
-              console.log(data)
-              $('#jstree').jstree({'core': {
-                  'data' : data
-              }});
-            },
-            error: function(data){
-              console.log("Error while retrieving data")
-              console.log(data)
-            }
-          })
-      }, 5000);
+    <script src="{{ url_for('static', filename='js/home_events.js') }}"></script>
     </script>
   </body>
 </html>

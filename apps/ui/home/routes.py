@@ -1,18 +1,15 @@
-from . import files
-from flask import Flask, render_template, jsonify, request
+from . import home
+from flask import render_template, jsonify, request, current_app as app
 from celery.result import AsyncResult
 import pprint, logging
 
-app = Flask(__name__)
 log = logging.getLogger(__name__)
 
-ROOT_DIR = 'C:/Users/JahMyst/Desktop/scrapex'
-
-@files.route('/')
+@home.route('/')
 def index():
-    return render_template('files.html')
+    return render_template('home.html')
 
-@files.route('/query', methods=['POST'])
+@home.route('/query', methods=['POST'])
 def query():
     from scrape import scrape_files
     log.info("-> Received query")
@@ -30,7 +27,7 @@ def query():
         url_data['subfolders'] = True
     url_data['extensions'] = url_data['extensions'].split(',')
     log.info("-> Creating Celery task ...")
-    r = scrape_files.delay([url_data], ROOT_DIR)
+    r = scrape_files.delay([url_data], app.conf['DOWNLOAD_FOLDER'])
     msg = "Task '%s' created" % r.id
     log.info("-> " + msg)
     resp = {
@@ -40,10 +37,10 @@ def query():
     log.debug(resp)
     return jsonify(resp)
 
-@files.route('/list', methods=['GET'])
+@home.route('/list', methods=['GET'])
 def list_files():
     from utils import get_dir_tree
-    files = get_dir_tree(ROOT_DIR)
+    files = get_dir_tree(app.conf['DOWNLOAD_FOLDER'])
     log.info(pprint.pformat(files))
     return jsonify(files)
 

@@ -7,18 +7,18 @@ $(document).ready(function(){
     });
     socket.on('status', function(data) {
         console.log("Status event received.")
-        $('#chat').val($('#chat').val() + '<' + data.msg + '>\n');
-        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+        write_chat('#chat', '<' + data.msg + '>')
     });
     socket.on('message', function(data) {
         console.log("Message event received.")
-        $('#chat').val($('#chat').val() + data.msg + '\n');
-        $('#chat').scrollTop($('#chat')[0].scrollHeight);
+        write_chat('#chat', data.msg)
     });
-    $('#save_name').on('click', function(){
-      var name = $('#name').val();
-      socket.emit('change_name', {name: name})
-    })
+    socket.on('name_changed', function(data){
+      var old_name = data.old_name;
+      var new_name = data.new_name;
+      var msg = "<'" + data.old_name + "' changed his name to '" + data.new_name + "'>"
+      emit('message', {msg: msg})
+    }
     $('#text').keypress(function(e) {
         console.log("Text event received.")
         var code = e.keyCode || e.which;
@@ -30,7 +30,8 @@ $(document).ready(function(){
         }
     });
     $('#rename').on('click', function(){
-
+      var name = $('#name').val();
+      socket.emit('change_name', {name: name})
     })
 });
 
@@ -40,4 +41,9 @@ function leave_room() {
         // go back to the login page
         window.location.href = "{{ url_for('videos.index') }}";
     });
+}
+
+function write_chat(selector, message){
+  $(selector).val($(selector).val() + data.msg + '\n');
+  $(selector).scrollTop($(selector)[0].scrollHeight);
 }

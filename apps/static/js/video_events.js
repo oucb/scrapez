@@ -11,7 +11,7 @@ $(document).ready(function(){
     socket.on('downloaded', function(item){
       $('a[href="' + item.url + '"]').parent().find('.ui.download.button')
         .text("Downloaded !")
-        .addClass('blue')
+        .toggleClass('primary positive')
         .addClass('disabled')
     })
     socket.on('progress', function(item){

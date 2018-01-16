@@ -3,7 +3,7 @@ $(document).ready(function(){
     socket = io.connect('http://' + document.domain + ':' + location.port + '/chat');
     socket.on('connect', function() {
         console.log("Connected to socket")
-        socket.emit('joined', {});
+        socket.emit('joined', { name: $('#name').val() });
     });
     socket.on('status', function(data) {
         console.log("Status event received.")
@@ -22,10 +22,14 @@ $(document).ready(function(){
         if (code == 13) {
             text = $('#text').val();
             $('#text').val('');
-            socket.emit('text', {msg: text});
+            var name = $('#name').val();
+            socket.emit('text', {msg: text, name: name});
             console.log("Text event sent to server")
         }
     });
+    $('#rename').on('click', function(){
+
+    })
 });
 
 function leave_room() {

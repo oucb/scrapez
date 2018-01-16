@@ -18,8 +18,8 @@ $(document).ready(function(){
       var new_name = data.new_name;
       var msg = "<'" + data.old_name + "' changed his name to '" + data.new_name + "'>"
       emit('message', {msg: msg})
-    }
-    $('#text').keypress(function(e) {
+    })
+    $('#text').keypress(function(e){
         console.log("Text event received.")
         var code = e.keyCode || e.which;
         if (code == 13) {

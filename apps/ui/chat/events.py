@@ -22,6 +22,9 @@ def text(message):
     print("Received '%s' from '%s' in room '%s'" % (message, name, room))
     emit('message', {'msg': name + ': ' + message['msg']}, room=room)
 
+@socketio.on('change_name', namespace='/chat')
+def text(message):
+    session['name'] = message['name']
 
 @socketio.on('left', namespace='/chat')
 def left(message):

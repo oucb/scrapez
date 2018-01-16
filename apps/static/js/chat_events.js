@@ -16,14 +16,17 @@ $(document).ready(function(){
         $('#chat').val($('#chat').val() + data.msg + '\n');
         $('#chat').scrollTop($('#chat')[0].scrollHeight);
     });
+    $('#save_name').on('click', function(){
+      var name = $('#name').val();
+      socket.emit('change_name', {name: name})
+    })
     $('#text').keypress(function(e) {
         console.log("Text event received.")
         var code = e.keyCode || e.which;
         if (code == 13) {
             text = $('#text').val();
             $('#text').val('');
-            var name = $('#name').val();
-            socket.emit('text', {msg: text, name: name});
+            socket.emit('text', {msg: text});
             console.log("Text event sent to server")
         }
     });

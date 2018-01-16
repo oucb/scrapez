@@ -83,7 +83,7 @@ function add_video(item) {
     dropdown += "<div class='ui item' data-value='" + stream.itag + "'>" + stream.resolution + " (" + stream.mime_type +")" + "</div>"
   })
   dropdown += "</div></div>"
-  var button = "&nbsp<div class='ui download disabled primary button'><i class='ui download button'></i>Download</div>"
+  var button = "&nbsp<div class='ui download disabled primary button'><i class='ui download icon'></i>Download</div>"
 
   // row_content += "<div class='content'>" + header + "</div>"
   row_content += "<div class='content'>" + header + "</br></br>" + dropdown + button + "</div>"

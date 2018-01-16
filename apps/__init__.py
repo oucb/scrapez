@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_jsglue import JSGlue
+from flask_sslify import SSLify
 from apps.ui.blueprints import BLUEPRINTS
 from apps.ui.extensions import EXTENSIONS
 import os

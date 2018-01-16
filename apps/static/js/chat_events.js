@@ -17,6 +17,7 @@ $(document).ready(function(){
       var old_name = data.old_name;
       var new_name = data.new_name;
       var msg = "<'" + data.old_name + "' changed his name to '" + data.new_name + "'>"
+      console.log(msg)
       socket.emit('message', {msg: msg})
     })
     $('#text').keypress(function(e){

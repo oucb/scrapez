@@ -19,15 +19,17 @@ def text(message):
     The message is sent to all people in the room."""
     room = session.get('room', 'default')
     name = session.get('name') or message.get('name', 'unknown')
-    print("Received '%s' from '%s' in room '%s'" % (message, name, room))
-    emit('message', {'msg': name + ': ' + message['msg']}, room=room)
+    msg = message['msg']
+    full_msg = name + ': ' + msg
+    print("Chat message --> %s (room '%s')" % (full_msg, room))
+    emit('message', {'msg': full_msg}, room=room)
 
 @socketio.on('change_name', namespace='/chat')
 def text(message):
     old_name = session.get('name', 'unknown')
     new_name = message.get('name', 'unknown')
     if not new_name == old_name:
-        print("User changed name from '%s' to '%s'" % (old_name, new_name))
+        print("'%s' changed name to '%s'" % (old_name, new_name))
         emit('name_changed', {old_name: old_name, new_name: new_name})
 
 @socketio.on('left', namespace='/chat')

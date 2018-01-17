@@ -1,5 +1,6 @@
 from celery import task, group
 from celery.result import allow_join_result
+from celery.task.log import get_task_logger
 from celeryapp import app
 from pytube import YouTube
 from flask_socketio import SocketIO
@@ -10,7 +11,7 @@ import pprint
 import json
 import os
 
-log = logging.getLogger(__name__)
+log = get_task_logger(__name__)
 socketio = SocketIO(
     message_queue='redis://localhost',
     async_mode='eventlet',

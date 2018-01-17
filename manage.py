@@ -8,7 +8,7 @@ import sys
 log = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG,
                     filename="scrapez.log",
-                    format='%(asctime)s %(message)s',
+                    format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
                     handlers=[logging.StreamHandler()])
 
 app = create_app()

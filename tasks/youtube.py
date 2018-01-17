@@ -2,7 +2,6 @@ from celery import task, group
 from celery.result import allow_join_result
 from celery.utils.log import get_task_logger
 from celeryapp import app
-from pytube import YouTube
 from flask_socketio import SocketIO
 from pytube.cli import display_progress_bar
 import eventlet
@@ -10,6 +9,14 @@ import logging
 import pprint
 import json
 import os
+
+# monkey patch PyTube
+import pytube
+def safe_filename(s, max_length=255):
+    import base64
+    return base64.urlsafe_b64encode(your_string)
+pytube.helpers.safe_filename = safe_filename
+
 
 log = get_task_logger(__name__)
 socketio = SocketIO(
@@ -26,7 +33,7 @@ def download(url, itag, output_path=None, filename=None):
         url (str): A valid YouTube watch URL.
         itag (str): YouTube format identifier code.
     """
-    yt = YouTube(url, on_progress_callback=on_progress)
+    yt = pytube.YouTube(url, on_progress_callback=on_progress)
     stream = yt.streams.get_by_itag(int(itag))
     log.info('\n{fn} | {fs} bytes'.format(
         fn=stream.default_filename,
@@ -46,7 +53,7 @@ def list_streams(url, order_by='resolution'):
     """
     try:
         print("Listing streams for %s" % url)
-        yt = YouTube(url)
+        yt = pytube.YouTube(url)
         streams = yt.streams.order_by(order_by).desc().all()
         streams = get_json_streams(streams)
         print("%s streams found" % len(streams))
@@ -66,7 +73,7 @@ def list_streams(url, order_by='resolution'):
         return {}
 
 def get_yt(url):
-    return YouTube(url)
+    return pytube.YouTube(url)
 
 @app.task()
 def search(query):

@@ -21,13 +21,13 @@ def create_app(profile=None, ssl=False):
     if ssl:
         sslify = SSLify(app)
     app.config.from_object(cfg)
-    app.url_map.strict_slashes = False
     if app.config['FLASK_APP'] == 'api':
         print("Creating API layer ...")
         flash = Flash(resources=[Download], app=app, config=config, profile=profile)
         app = flash.app
         register_extensions(app, EXTENSIONS_API)
     else:
+        app.url_map.strict_slashes = False
         register_blueprints(app, BLUEPRINTS)
         register_extensions(app, EXTENSIONS)
     return app

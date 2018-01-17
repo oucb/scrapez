@@ -19,7 +19,7 @@ $(document).ready(function(){
       var $download_button = $('a[href="' + item.url + '"]').parent().find('.ui.download.button')
       var text = $download_button.innerHTML;
       $download_button.attr('data-id', item.percent)
-      $download_button.html('<i class="ui loading icon">Downloading ... </i>' + String(item.percent) + " %")
+      $download_button.html('<i class="ui loading icon"></i>Downloading ...' + String(item.percent) + " %")
     })
     $('#loader').hide();
 

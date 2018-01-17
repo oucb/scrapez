@@ -17,9 +17,10 @@ $(document).ready(function(){
     socket.on('progress', function(item){
       console.log(item.percent);
       console.log("Updating progress for " + item.url)
-      var progress = $('a[href="' + item.url + '"]').parent().find('.progress');
+      var text = $('a[href="' + item.url + '"]').text();
+      var text = text + '<i class="ui loading icon"></i>' + String(item.percent) + " %"
+      $('a[href="' + item.url + '"]').text(text);
       console.log(progress)
-      progress.text(String(item.percent) + " %")
     })
     $('#loader').hide();
 
@@ -123,7 +124,6 @@ function add_video(item) {
 
     // Downloaded
     $('.ui.download.button').on('click', function(){
-      $(this).after('<div class="ui segment progress"><i class="ui loading icon"></i><div class="percent"></div></div>')
       var itag = $(this).parent().find('.ui.dropdown').dropdown('get value');
       var url = $(this).parent().find('.header').attr('href');
       console.log("Itag: " + itag)

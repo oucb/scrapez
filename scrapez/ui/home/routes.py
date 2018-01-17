@@ -1,5 +1,5 @@
 from . import home
-from ..utils import get_dir_tree
+from ...utils import get_dir_tree
 from flask import render_template, jsonify, request, current_app as app
 from celery.result import AsyncResult
 import pprint, logging

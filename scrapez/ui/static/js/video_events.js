@@ -126,7 +126,8 @@ function add_video(item) {
 
     // Downloaded
     $('.ui.download.button').on('click', function(){
-      $(this).append('<div class="ui segment progress"><i class="ui loading icon"></i><div class="percent"></div></div>')
+      var icon = '<i class="ui loading icon"></i><div class="percent"></div>'
+      $(this).append('<div style="display:inline" class="ui segment progress"></div>')
       var itag = $(this).parent().find('.ui.dropdown').dropdown('get value');
       var url = $(this).parent().find('.header').attr('href');
       console.log("Itag: " + itag)

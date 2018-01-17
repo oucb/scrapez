@@ -2,16 +2,10 @@ from flask_script import Manager, Server
 from apps import create_app
 from apps.ui.extensions import socketio
 import config
-import logging
 import sys
 
-log = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG,
-                    # filename="scrapez.log",
-                    format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
-                    handlers=[logging.StreamHandler()])
-
 app = create_app()
+log = app.logger
 manager = Manager(app)
 
 class CustomServer(Server):

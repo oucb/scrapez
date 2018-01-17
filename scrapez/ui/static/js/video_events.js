@@ -15,11 +15,11 @@ $(document).ready(function(){
         .addClass('disabled')
     })
     socket.on('progress', function(item){
-      console.log(item.percent);
-      console.log("Updating progress for " + item.url)
-      var text = $('a[href="' + item.url + '"]').text();
-      var text = text + '<i class="ui loading icon"></i>' + String(item.percent) + " %"
-      $('a[href="' + item.url + '"]').text(text);
+      console.log(item.percent + " % | " + item.url)
+      var $download_button = $('a[href="' + item.url + '"]').parent().find('.ui.download.button')
+      var text = $download_button.innerHTML;
+      $download_button.attr('data-id', item.percent)
+      $download_button.text('Downloading ... <i class="ui loading icon"></i>' + String(item.percent) + " %")
       console.log(progress)
     })
     $('#loader').hide();

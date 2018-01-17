@@ -18,7 +18,9 @@ $(document).ready(function(){
       console.log(item.percent);
       console.log(item.url + ' :' + item.percent);
       console.log("Updating progress")
-      $('a[href="' + item.url + '"]').parent().find('.progress').find('.percent').attr('id', item.percent)
+      var progress = $('a[href="' + item.url + '"]').parent().find('.progress');
+      console.log(progress)
+      progress.innerHTML(item.percent + " %")
     })
     $('#loader').hide();
 

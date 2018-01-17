@@ -1,6 +1,6 @@
 from flask_script import Manager, Server
-from apps import create_app
-from apps.ui.extensions import socketio
+from scrapez.ui import create_app
+from scrapez.ui.extensions import socketio
 from flask_flash.extensions import db
 from flask_script import Shell
 from flask_migrate import Migrate
@@ -13,13 +13,12 @@ logging.basicConfig(level=logging.DEBUG,
                     filename="ui.log",
                     format='[%(asctime)s: %(levelname)s/%(processName)s] %(message)s',
                     handlers=[logging.StreamHandler()])
-
 app = create_app()
 manager = Manager(app)
 migrate = Migrate(app, db)
 
 def make_shell_context():
-    from apps.api import models
+    from scrapez.api import models
     return dict(app=app, db=db, models=models)
 
 # Manager commands

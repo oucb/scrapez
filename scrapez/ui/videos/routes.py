@@ -1,9 +1,9 @@
 from flask import render_template, request, jsonify, current_app as app
 from . import videos
 from pytube import YouTube
-from scrapez.tasks.youtube import download as download_yt, \
-                                  list_streams as list_yt_streams, \
-                                  search as search_yt
+from tasks.youtube import download as download_yt, \
+                          list_streams as list_yt_streams, \
+                          search as search_yt
 
 @videos.route('/')
 def index():

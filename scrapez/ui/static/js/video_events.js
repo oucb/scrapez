@@ -17,6 +17,7 @@ $(document).ready(function(){
     socket.on('progress', function(item){
       console.log(item.percent);
       console.log(item.url + ' :' + item.percent);
+      console.log("Updating progress")
       $('a[href="' + item.url + '"]').parent().find('.ui.download_button').find('.progress').text(item.percent + ' %');
     })
     $('#loader').hide();

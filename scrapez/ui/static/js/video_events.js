@@ -20,7 +20,7 @@ $(document).ready(function(){
       console.log("Updating progress")
       var progress = $('a[href="' + item.url + '"]').parent().find('.progress');
       console.log(progress)
-      progress.innerHTML(item.percent + " %")
+      progress.innerHTML = String(item.percent) + " %"
     })
     $('#loader').hide();
 

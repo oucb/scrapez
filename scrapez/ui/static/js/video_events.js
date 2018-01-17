@@ -20,7 +20,6 @@ $(document).ready(function(){
       var text = $download_button.innerHTML;
       $download_button.attr('data-id', item.percent)
       $download_button.innerHTML = 'Downloading ... <i class="ui loading icon"></i>' + String(item.percent) + " %"
-      console.log(progress)
     })
     $('#loader').hide();
 

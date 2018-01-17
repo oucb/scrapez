@@ -20,7 +20,8 @@ def run():
         socketio.run(app,
                      host='127.0.0.1',
                      port=5000,
-                     use_reloader=False)
+                     use_reloader=False,
+                     log_output=True)
     except Exception as e:
         log.exception(e)
     except KeyboardInterrupt:

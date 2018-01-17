@@ -12,8 +12,6 @@ log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.DEBUG)
 
-APP_TYPE = os.environ['APP_TYPE']
-
 def create_app(profile=None, ssl=False):
     if profile is None:
         profile = os.environ.get('PROFILE', 'default')
@@ -24,7 +22,7 @@ def create_app(profile=None, ssl=False):
         sslify = SSLify(app)
     app.config.from_object(cfg)
     app.url_map.strict_slashes = False
-    if APP_TYPE == 'api':
+    if app.config['FLASK_APP'] == 'api':
         print("Creating API layer ...")
         flash = Flash(resources=[Download], app=app, config=config, profile=profile)
         app = flash.app

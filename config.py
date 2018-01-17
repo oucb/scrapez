@@ -2,7 +2,7 @@ import os
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
-APP_TYPE = os.environ.get('APP_TYPE', 'ui')
+APP_TYPE = os.environ.get('FLASK_APP', 'ui')
 
 class Config(object):
     APP_TYPE = APP_TYPE

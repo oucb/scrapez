@@ -1,6 +1,6 @@
 from celery import task, group
 from celery.result import allow_join_result
-from celery.app.log import get_task_logger
+from celery.utils.log import get_task_logger
 from celeryapp import app
 from pytube import YouTube
 from flask_socketio import SocketIO

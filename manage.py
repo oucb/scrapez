@@ -1,6 +1,9 @@
 from flask_script import Manager, Server
 from apps import create_app
 from apps.ui.extensions import socketio
+from flask_flash.extensions import db
+from flask_script import Shell
+from flask_migrate import Migrate
 import config
 import logging
 import sys
@@ -13,15 +16,28 @@ logging.basicConfig(level=logging.DEBUG,
 
 app = create_app()
 manager = Manager(app)
+migrate = Migrate(app, db)
 
+def make_shell_context():
+    from apps.api import models
+    return dict(app=app, db=db, models=models)
+
+# Manager commands
+manager.add_command("shell", Shell(make_context=make_shell_context))
 @manager.command
-def run():
+def runserver():
     try:
-        socketio.run(app,
-                     host='127.0.0.1',
-                     port=5000,
-                     use_reloader=False,
-                     log_output=True)
+        app_type = app.config['APP_TYPE']
+        if app_type == 'ui':
+            socketio.run(app,
+                         host='127.0.0.1',
+                         port=5000,
+                         use_reloader=app.config['DEBUG'],
+                         log_output=True)
+        elif app_type == 'api':
+            app.run(host='127.0.0.1', port=5001, use_reloader=app.config['DEBUG'])
+        else:
+            raise Exception("%s not known" % app_type)
     except Exception as e:
         log.exception(e)
     except KeyboardInterrupt:

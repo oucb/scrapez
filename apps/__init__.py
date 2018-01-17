@@ -1,7 +1,9 @@
 from flask import Flask
 from flask_sslify import SSLify
+from flask_flash import Flash
+from apps.api.resources import Download
 from apps.ui.blueprints import BLUEPRINTS
-from apps.ui.extensions import EXTENSIONS
+from apps.ui.extensions import EXTENSIONS, EXTENSIONS_API
 import os
 import logging
 from config import config
@@ -9,6 +11,8 @@ from config import config
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler())
 log.setLevel(logging.DEBUG)
+
+APP_TYPE = os.environ['APP_TYPE']
 
 def create_app(profile=None, ssl=False):
     if profile is None:
@@ -20,8 +24,14 @@ def create_app(profile=None, ssl=False):
         sslify = SSLify(app)
     app.config.from_object(cfg)
     app.url_map.strict_slashes = False
-    register_blueprints(app, BLUEPRINTS)
-    register_extensions(app, EXTENSIONS)
+    if APP_TYPE == 'api':
+        print("Creating API layer ...")
+        flash = Flash(resources=[Download], app=app, config=config, profile=profile)
+        app = flash.app
+        register_extensions(app, EXTENSIONS_API)
+    else:
+        register_blueprints(app, BLUEPRINTS)
+        register_extensions(app, EXTENSIONS)
     return app
 
 def register_blueprints(app, blueprints):

@@ -126,7 +126,6 @@ def on_progress(stream, chunk, file_handle, bytes_remaining):
     """
     filesize = stream.filesize
     bytes_received = filesize - bytes_remaining
-    display_progress_bar(bytes_received, filesize)
     percent = round(100.0 * bytes_received / float(filesize), 1)
     url = stream.player_config_args['loaderUrl']
     socketio.emit('progress', {'percent': percent, 'url': url}, namespace='/video')

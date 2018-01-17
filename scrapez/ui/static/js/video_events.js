@@ -18,7 +18,7 @@ $(document).ready(function(){
       console.log(item.percent);
       console.log(item.url + ' :' + item.percent);
       console.log("Updating progress")
-      $('a[href="' + item.url + '"]').parent().find('.ui.download_button').find('.progress').text(item.percent + ' %');
+      $('a[href="' + item.url + '"]').parent().find('.ui.download_button').find('.progress-percent').text(item.percent + ' %');
     })
     $('#loader').hide();
 
@@ -122,7 +122,7 @@ function add_video(item) {
 
     // Downloaded
     $('.ui.download.button').on('click', function(){
-      $(this).append('<i class="ui loading icon"></i><div class="progress"></div>')
+      $(this).append('<div style="display:inline" class="progress"><i class="ui loading icon"></i><div class="progress-percent"></div></div>')
       var itag = $(this).parent().find('.ui.dropdown').dropdown('get value');
       var url = $(this).parent().find('.header').attr('href');
       console.log("Itag: " + itag)

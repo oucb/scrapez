@@ -43,25 +43,30 @@ Mako==1.0.7
 MarkupSafe==1.0
 marshmallow==2.15.0
 marshmallow-sqlalchemy==0.13.2
+meld3==1.0.2
 numpy==1.14.0
 pathlib2==2.3.0
+pexpect==4.3.1
 pickleshare==0.7.4
 prompt-toolkit==1.0.15
+ptyprocess==0.5.2
 Pygments==2.2.0
 python-dateutil==2.6.1
 python-dotenv==0.7.1
 python-editor==1.0.3
 python-engineio==2.0.2
 python-socketio==1.8.4
-pytube==8.0.2
+-e git+https://github.com/ocervell/pytube@b79790ab40bd356f3efa495b2c64782ff6234ffb#egg=pytube
 pytz==2017.3
 PyYAML==3.12
 redis==2.10.6
 requests==2.18.4
 scandir==1.6
+-e git+https://github.com/ocervell/scrapez.git@bcb780dfb5129c2fbdf445a05768f063d19b64d5#egg=scrapez
 simplegeneric==0.8.1
 six==1.11.0
 SQLAlchemy==1.2.1
+supervisor==3.3.3
 text-unidecode==1.1
 traitlets==4.3.2
 urllib3==1.22

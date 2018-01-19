@@ -2,11 +2,16 @@ from flask_flash.extensions import db, ma
 
 class DownloadModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.Text)
+    title = db.Column(db.Text)
+    url = db.Column(db.Text)
     path = db.Column(db.Text)
+    size = db.Column(db.Integer)
+    extra_data = db.Column(db.Text)
 
 class DownloadSchema(ma.ModelSchema):
     class Meta:
         model = DownloadModel
-    name = ma.Field(required=True)
+    title = ma.Field(required=True)
+    url = ma.Field(required=True)
     path = ma.Field(required=True)
+    size = ma.Field(required=True)

@@ -12,13 +12,13 @@ def index():
 @videos.route('/youtube/search')
 def search_youtube():
     query = request.args['query']
-    data = search_yt(query)
+    data = search_yt(query, async=True, events=True)
     return jsonify(data)
 
 @videos.route('/youtube/list')
 def list_youtube_streams():
     url = request.args['url']
-    data = list_yt_streams(url)
+    data = list_yt_streams(url, events=True)
     return jsonify(data)
 
 @videos.route('/youtube/download')
@@ -29,7 +29,7 @@ def download_youtube():
     print("Downloading %s with itag %s" % (url, itag))
     # print("Download folder: %s" % app.config['DOWNLOAD_FOLDER'])
     try:
-        res = download_yt.delay(url, itag, output_path=app.config['DOWNLOAD_FOLDER'])
+        res = download_yt.delay(url, itag, output_path=app.config['DOWNLOAD_FOLDER'], api=True, events=True)
         return jsonify({
             'success': True,
             'message': 'Your video is downloading',

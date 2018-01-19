@@ -3,48 +3,72 @@ from celery.result import allow_join_result
 from celery.utils.log import get_task_logger
 from celeryapp import app
 from flask_socketio import SocketIO
-from pytube.cli import display_progress_bar
 import eventlet
 import logging
 import pprint
 import json
 import os
+import uuid
+import requests
 
 # monkey patch PyTube
 import pytube
 def safe_filename(s, max_length=255):
-    import base64
-    return base64.urlsafe_b64encode(your_string)
-pytube.helpers.safe_filename = safe_filename
-
+    return str(uuid.uuid4())
 
 log = get_task_logger(__name__)
-socketio = SocketIO(
-    message_queue='redis://localhost',
-    async_mode='eventlet',
-    logger=True,
-    engineio_logger=True)
+
+try:
+    socketio = SocketIO(
+        message_queue='redis://localhost',
+        async_mode='eventlet',
+        logger=True,
+        engineio_logger=True)
+except ImportError:
+    log.warning("SocketIO not found ! Events won't work.")
+    socketio = None
 
 @app.task()
-def download(url, itag, output_path=None, filename=None):
+def download(url, itag, output_path=None, filename=None, api=False, events=False):
     """Start downloading a YouTube video.
 
     Args:
         url (str): A valid YouTube watch URL.
         itag (str): YouTube format identifier code.
     """
-    yt = pytube.YouTube(url, on_progress_callback=on_progress)
+    yt = pytube.YouTube(url, on_progress_callback=on_progress(events=events))
     stream = yt.streams.get_by_itag(int(itag))
+    title = stream.default_filename
+    pytube.helpers.safe_filename = safe_filename # monkey patch pytube for default filename
     log.info('\n{fn} | {fs} bytes'.format(
         fn=stream.default_filename,
         fs=stream.filesize,
     ))
-    stream.download(output_path=output_path, filename=stream.default_filename)
-    socketio.emit('downloaded', {'url': url, 'itag': itag, 'size': stream.filesize }, namespace='/video')
-    return os.path.join(output_path, stream.default_filename)
+    try:
+        stream.download(output_path=output_path, filename=stream.default_filename)
+    except Exception as e:
+        msg = "Error while downloading video to '%s'. %s: %s" % (output_path, type(e).__name__, str(e)) 
+        log.exception(e)
+
+    full_path = os.path.join(output_path, stream.default_filename)
+    data = {
+        'title': title,
+        'path': full_path,
+        'url': url,
+        'size': stream.filesize,
+        'extra_data': "itag=%s" % itag
+    }
+    if api:
+        r = requests.post('http://localhost:5001/api/downloads', json=data)
+        if not r.ok:
+            log.error("Error while adding download to API. %s (%s)" % (r.status_code, r.reason))
+            log.info(r.json())
+    if events:
+        socketio.emit('downloaded', data, namespace='/video')
+    return data
 
 @app.task()
-def list_streams(url, order_by='resolution'):
+def list_streams(url, order_by='resolution', events=False):
     """List available YouTube streams from URL.
 
     Args:
@@ -64,7 +88,8 @@ def list_streams(url, order_by='resolution'):
             'thumbnail_url': yt.thumbnail_url,
             'streams': streams
         }
-        socketio.emit('new_video', data, namespace='/video')
+        if events:
+            socketio.emit('new_video', data, namespace='/video')
         log.debug(pprint.pformat(data))
         return data
     except Exception as e:
@@ -76,7 +101,7 @@ def get_yt(url):
     return pytube.YouTube(url)
 
 @app.task()
-def search(query):
+def search(query, async=False, events=False):
     """Search YouTube and return a list of video links.
 
     Args:
@@ -97,12 +122,17 @@ def search(query):
             urls.append('https://www.youtube.com' + url)
 
     # Get streams for each URL and return streams data as well
-    log.info("Executing group of %s tasks .." % len(urls))
-    # urls = [urls[0]]
-    g = group([list_streams.s(u) for u in urls])
-    r = g.apply_async()
-    with allow_join_result():
-        result = r.get()
+    log.info("Executing %s tasks. Distributed ? %s .." % (len(urls), async))
+    if async:
+        g = group([list_streams.s(u, events=events) for u in urls])
+        r = g.apply_async()
+        with allow_join_result():
+            result = r.get()
+    else:
+        result = []
+        for u in urls:
+            res = list_streams(u, events=events)
+            result.append(res)
     return result
 
 def get_json_streams(streams):
@@ -121,19 +151,22 @@ def get_json_streams(streams):
     res = sorted(res, key=lambda k: k['resolution_int'], reverse=True)
     return res
 
-def on_progress(stream, chunk, file_handle, bytes_remaining):
-    """On download progress callback function.
-    :param object stream:
-        An instance of :class:`Stream <Stream>` being downloaded.
-    :param file_handle:
-        The file handle where the media is being written to.
-    :type file_handle:
-        :py:class:`io.BufferedWriter`
-    :param int bytes_remaining:
-        How many bytes have been downloaded.
-    """
-    filesize = stream.filesize
-    bytes_received = filesize - bytes_remaining
-    percent = round(100.0 * bytes_received / float(filesize), 1)
-    url = stream.player_config_args['loaderUrl']
-    socketio.emit('progress', {'percent': percent, 'url': url}, namespace='/video')
+def on_progress(events=False):
+    def inner(stream, chunk, file_handle, bytes_remaining, events=events):
+        """On download progress callback function.
+        :param object stream:
+            An instance of :class:`Stream <Stream>` being downloaded.
+        :param file_handle:
+            The file handle where the media is being written to.
+        :type file_handle:
+            :py:class:`io.BufferedWriter`
+        :param int bytes_remaining:
+            How many bytes have been downloaded.
+        """
+        filesize = stream.filesize
+        bytes_received = filesize - bytes_remaining
+        percent = round(100.0 * bytes_received / float(filesize), 1)
+        url = stream.player_config_args['loaderUrl']
+        if events and (percent.is_integer()):
+            socketio.emit('progress', {'percent': percent, 'url': url}, namespace='/video')
+    return inner

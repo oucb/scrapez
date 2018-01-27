@@ -15,8 +15,11 @@ $(document).ready(function(){
         .addClass('disabled')
     })
     socket.on('progress', function(item){
-      console.log(item.percent);
-      console.log(item.url + ' :' + item.percent)
+      console.log(item.percent + " % | " + item.url)
+      var $download_button = $('a[href="' + item.url + '"]').parent().find('.ui.download.button')
+      var text = $download_button.innerHTML;
+      $download_button.attr('data-id', item.percent)
+      $download_button.html('<i class="ui yellow loading icon"></i>Downloading (' + String(item.percent) + " %)")
     })
     $('#loader').hide();
 

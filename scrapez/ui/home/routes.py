@@ -1,4 +1,5 @@
 from . import home
+from ...utils import get_dir_tree
 from flask import render_template, jsonify, request, current_app as app
 from celery.result import AsyncResult
 import pprint, logging
@@ -39,7 +40,6 @@ def query():
 
 @home.route('/list', methods=['GET'])
 def list_files():
-    from utils import get_dir_tree
     files = get_dir_tree(app.conf['DOWNLOAD_FOLDER'])
     log.info(pprint.pformat(files))
     return jsonify(files)

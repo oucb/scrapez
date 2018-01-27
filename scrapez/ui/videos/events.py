@@ -1,6 +1,6 @@
-from flask import session
-from flask_socketio import emit, join_room, leave_room
-from apps.ui.extensions import socketio
+# from flask import session
+# from flask_socketio import emit, join_room, leave_room
+# from ..extensions import socketio
 
 # @socketio.on('search_done', namespace='/video')
 # def joined(message):

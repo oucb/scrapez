@@ -55,9 +55,16 @@
 
 ### Run ScrapEZ UI
   ```
-  python manage.py runserver --threaded -d -r
-  >> App running on 5000 ...
+  FLASK_APP=scrapez/ui/app.py flask run
+  >> Running on port 5000 ...
   ```
+  
+## Run ScrapEZ API
+  ```
+  FLASK_APP=scrapez/api/app.py flask run
+  >> Running on port 5001 ...
+  ```
+  
 ### Run ScrapEZ Celery worker
   ```
   celery worker -A celeryapp.app -l info

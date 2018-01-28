@@ -59,7 +59,7 @@
   >> Running on port 5000 ...
   ```
   
-## Run ScrapEZ API
+### Run ScrapEZ API
   ```
   FLASK_APP=scrapez/api/app.py flask run --host 0.0.0.0 --port 5001
   >> Running on port 5001 ...

@@ -8,9 +8,77 @@
 * Visualize and categorize Bookmarks and Links.
 * Backup scraped data locally or on the cloud.
 
-## Install
+## Quickstart (Docker)
+You'll need to have `docker` and `docker-compose` installed.
 
-### Get ScrapEZ code
+Run `scrapez`:
+```
+docker-compose up
+```
+
+* Run in the background by using `docker-compose up -d` (detached).
+* Check the UI is running by navigating to `localhost:5000`.
+* Tail the logs by using `docker-compose logs -f`.
+
+**Note:** If you get a "version unsupported" error, you need to upgrade `docker-compose`:
+```
+sudo rm /usr/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+```
+
+## Quickstart (supervisor)
+Let's clone the repo, create a virtualenv, install the pip requirements and run our application.
+
+In a terminal (Ubuntu here):
+
+```
+# Get the code
+git clone https://github.com/xavierfav/meloshare
+
+# Create virtualenv
+mkvirtualenv meloshare # Note: You can also use the command `virtualenv venv`.
+
+# Install pip dependencies
+pip install -r requirements.txt 
+
+# Install Redis
+apt install redis-server 
+
+# Run supervisor
+supervisord -c supervisord.conf # run all services
+
+# Administrate services (stop, start, restart, reload, ...)
+supervisorctl 
+```
+
+After running the above steps the following services should be RUNNING in `supervisorctl` shell:
+- `ui`  --> User interface (port 5000)
+- `api` --> Application programming interface (port 5001)
+- `worker` --> Celery worker processing tasks
+- `scheduler` --> Celery scheduler for periodic tasks
+- `redis` --> Redis server (API caching for GET requests)
+
+Supervisor allows you to administrate the services from the shell with the commands: `status <service>`, `start <service>`, `stop <service>`, `restart <service>`, or `tail -f <service>`.
+
+You can also use `start/stop/status all` to control all services.
+
+You can pass a space-separated list of services to control multiple simultaneously.
+
+You can reload the supervisor configuration and update the running processes: `reread` and then `update`.
+
+## Scrape !
+* Visit `localhost:5000`
+* Enter a URL in the search box
+* Enter a list of extensions to search for
+* Click 'Scrape it !'
+
+## Development
+
+Supervisor is merely running commands for you and control the life of your processes.
+The following shows which command is run by supervisor for each service.
+
+### Get the code
   ```
   git clone https://github.com/ocervell/scrapez.git
   ```
@@ -41,37 +109,24 @@
   
   **On Windows**, follow the [installation instructions](https://github.com/rgl/redis/downloads)
   
-## Run
-
 ### Run Redis
+```
+redis-server
+```
 
-  **On Mac**, run:
-  ```
-  redis-server
-  ```
-  
-  **On Windows**, verify that "Redis Server" service is running (right click -> Start):
-  ![](https://user-images.githubusercontent.com/9629314/34919199-f81d5268-f924-11e7-8d3c-faffd8ce1dfd.PNG)
-
-### Run ScrapEZ UI
+### Run the UI
   ```
   FLASK_APP=scrapez/ui/app.py flask run  --host 0.0.0.0 --port 5000
   >> Running on port 5000 ...
   ```
   
-### Run ScrapEZ API
+### Run the API
   ```
   FLASK_APP=scrapez/api/app.py flask run --host 0.0.0.0 --port 5001
   >> Running on port 5001 ...
   ```
-  
-### Run ScrapEZ Celery worker
-  ```
-  celery worker -A celeryapp.app -l info
-  ```
 
-## Scrape !
-* Visit `localhost:5000`
-* Enter a URL in the search box
-* Enter a list of extensions to search for
-* Click 'Scrape it !'
+### Run the worker
+```
+celery worker -A scrapez.celeryapp:app -l info
+```

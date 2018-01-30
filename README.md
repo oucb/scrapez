@@ -11,7 +11,7 @@
 ## Quickstart (Docker)
 You'll need to have `docker` and `docker-compose` installed.
 ```
-git clone https://github.com/ocervell/scrapez.git
+git clone https://github.com/ocervell/scrapez
 cd scrapez
 docker-compose up
 ```

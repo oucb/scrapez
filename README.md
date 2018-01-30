@@ -34,10 +34,10 @@ In a terminal (Ubuntu here):
 
 ```
 # Get the code
-git clone https://github.com/xavierfav/meloshare
+git clone https://github.com/ocervell/scrapez
 
 # Create virtualenv
-mkvirtualenv meloshare # Note: You can also use the command `virtualenv venv`.
+mkvirtualenv scrapez # Note: You can also use the command `virtualenv venv`.
 
 # Install pip dependencies
 pip install -r requirements.txt 
@@ -80,7 +80,7 @@ The following shows which command is run by supervisor for each service.
 
 ### Get the code
   ```
-  git clone https://github.com/ocervell/scrapez.git
+  git clone https://github.com/ocervell/scrapez
   ```
   
 ### Create virtualenv

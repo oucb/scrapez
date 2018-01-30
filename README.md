@@ -17,11 +17,11 @@ git clone https://github.com/ocervell/scrapez.git
 # Go to the code folder
 cd scrapez
 
-# Bring up the services
+# Run
 docker-compose up
 ```
 
-* Run in the background by using `docker-compose up -d` (detached).
+* Run services in the background by using `docker-compose up -d` (detached).
 * Check the UI is running by navigating to `localhost:5000`.
 * Tail the logs by using `docker-compose logs -f`.
 

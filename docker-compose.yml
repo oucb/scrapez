@@ -1,0 +1,56 @@
+version: "3"
+services:
+  ui:
+    build: .
+    command: python -m flask run --host 0.0.0.0 --port 5000
+    environment:
+      - FLASK_APP=scrapez/ui/app.py
+      - FLASK_DEBUG=True
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/var/www/scrapez
+
+  api:
+    build: .
+    command: python -m flask run --host 0.0.0.0 --port 5001
+    environment:
+      - FLASK_APP=scrapez/api/app.py
+      - FLASK_DEBUG=True
+    ports:
+      - "5001:5001"
+    volumes:
+      - .:/var/www/scrapez
+    depends_on:
+      - cache
+      - db
+
+  worker:
+    build: .
+    command: python -m celery worker -A scrapez.celeryapp:app -l info
+    environment:
+      - BROKER_URL=amqp://broker:5672
+    volumes:
+      - .:/var/www/scrapez
+    depends_on:
+      - broker
+    volumes:
+      - .:/var/www/scrapez
+
+  db:
+    image: "postgres:alpine"
+    volumes:
+      - /var/lib/postgresql
+
+  cache:
+    image: "redis:alpine"
+
+  broker:
+    image: "rabbitmq:alpine"
+
+  #nginx_proxy:
+  #  build: ./nginx
+  #  depends_on:
+  #    - ui
+  #  ports:
+  #   - "8080:80"

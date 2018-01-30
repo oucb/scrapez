@@ -19,6 +19,7 @@ docker-compose up
 * Run services in the background by using `docker-compose up -d` (detached).
 * Check the UI is running by navigating to `localhost:5000`.
 * Tail the logs by using `docker-compose logs -f`.
+* Restart individual services by running `docker-compose restart <service_name>`
 
 **Note:** If you get a "version unsupported" error, you need to upgrade `docker-compose`:
 ```

@@ -9,10 +9,11 @@
 * Backup scraped data locally or on the cloud.
 
 ## Quickstart (Docker)
-You'll need to have `docker` and `docker-compose` installed.
+You'll need to have `docker` and `docker-compose` installed:
 
-Run `scrapez`:
 ```
+git clone https://github.com/ocervell/scrapez.git
+cd scrapez
 docker-compose up
 ```
 

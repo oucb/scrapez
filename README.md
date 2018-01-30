@@ -100,7 +100,7 @@ The following shows which command is run by supervisor for each service.
    On Windows, you'll need to install Cygwin to execute the steps above and run `scrapez`.
    On Windows, `bin/` is replaced by `Scripts/`, the last line becomes: `source venv/Scripts/activate`
   
-### Install ScrapEZ requirements
+### Install requirements
   ```
   pip install -r requirements.txt
   ```

@@ -5,12 +5,9 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-echo "Running as `whoami`"
-sudo apt-get install -y python-pip python-virtualenv
-pip install flask
-pip install -r requirements.txt
-pip install -e .
-FLASK_APP=scrapez/ui/app.py venv/bin/flask run'''
+sudo curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose up'''
       }
     }
   }

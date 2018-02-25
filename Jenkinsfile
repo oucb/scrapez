@@ -5,6 +5,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
+echo "Running as `whoami`"
 sudo apt-get install python-pip
 virtualenv venv
 venv/bin/pip install flask

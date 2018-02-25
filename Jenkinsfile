@@ -6,7 +6,7 @@ pipeline {
         sh '''#!/bin/bash
 
 echo "Running as `whoami`"
-sudo apt-get install -y python-pip
+sudo apt-get install -y python-pip python-virtualenv
 virtualenv venv
 venv/bin/pip install flask
 venv/bin/pip install -r requirements.txt

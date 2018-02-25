@@ -5,7 +5,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-sudo apt install python-pip
+sudo apt-get install python-pip
 pip install -r requirements.txt
 pip install -e .
 FLASK_APP=scrapez/ui/app.py flask run'''

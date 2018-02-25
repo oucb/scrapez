@@ -5,9 +5,9 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-sudo curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+curl -L https://github.com/docker/compose/releases/download/1.11.1/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
 sudo chmod +x /usr/local/bin/docker-compose
-sudo docker-compose up'''
+sudo /usr/local/bin/docker-compose up'''
       }
     }
   }

@@ -5,7 +5,7 @@ pipeline {
       steps {
         sh '''#!/bin/bash
 
-apt-get install python-pip
+sudo apt-get install python-pip
 virtualenv venv
 venv/bin/pip install flask
 venv/bin/pip install -r requirements.txt
